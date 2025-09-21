@@ -1,6 +1,5 @@
 'use client'
 
-import type { ColumnDef } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 import { useCallback, useMemo, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -45,9 +44,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@cared/ui/components/select'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 import { cn } from '@cared/ui/lib/utils'
 
-import { CircleSpinner } from '@cared/ui/components/spinner'
+import type { ColumnDef } from '@tanstack/react-table'
 import { PopoverTooltip } from '@/components/tooltip'
 import { useApiKeys, useCreateApiKey, useDeleteApiKey, useRotateApiKey } from '@/hooks/use-api-key'
 import { useApps } from '@/hooks/use-app'
@@ -388,7 +388,7 @@ function ApiKeysInner({
         <DataTable
           columns={columns}
           data={apiKeys}
-          searchKeys={["name"]}
+          searchKeys={['name']}
           searchPlaceholder="Search API keys..."
         />
       )}

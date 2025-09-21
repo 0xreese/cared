@@ -1,10 +1,11 @@
 import { z } from 'zod/v4'
 
-import { auth } from '@cared/auth'
+import { auth, headers } from '@cared/auth'
 import { inArray } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { ApiKey } from '@cared/db/schema'
 
+import type { BaseContext } from '../orpc'
 import type { ApiKeyMetadata } from '../types'
 
 export const apiKeyMetadataSchema = z.discriminatedUnion('scope', [
@@ -67,8 +68,13 @@ export function formatApiKey(key: {
   }
 }
 
-export async function listApiKeys(input: z.infer<typeof optionalApiKeyMetadataSchema>) {
-  const allApiKeys = await auth.api.listApiKeys()
+export async function listApiKeys(
+  ctx: BaseContext,
+  input: z.infer<typeof optionalApiKeyMetadataSchema>,
+) {
+  const allApiKeys = await auth.api.listApiKeys({
+    headers: headers(ctx.headers),
+  })
 
   let filteredKeys = allApiKeys
 
@@ -109,13 +115,16 @@ export async function listApiKeys(input: z.infer<typeof optionalApiKeyMetadataSc
   return filteredKeys.sort((a, b) => b.id.localeCompare(a.id)).map(formatApiKey)
 }
 
-export async function deleteApiKeys(input: z.infer<typeof optionalApiKeyMetadataSchema>) {
-  const apiKeys = await listApiKeys(input)
+export async function deleteApiKeys(
+  ctx: BaseContext,
+  input: z.infer<typeof optionalApiKeyMetadataSchema>,
+) {
+  const apiKeys = await listApiKeys(ctx, input)
   if (apiKeys.length === 0) {
     return
   }
 
-  await db.delete(ApiKey).where(
+  await getDb().delete(ApiKey).where(
     inArray(
       ApiKey.id,
       apiKeys.map((key) => key.id),
@@ -123,5 +132,5 @@ export async function deleteApiKeys(input: z.infer<typeof optionalApiKeyMetadata
   )
 
   // Call again to check
-  await deleteApiKeys(input)
+  await deleteApiKeys(ctx, input)
 }

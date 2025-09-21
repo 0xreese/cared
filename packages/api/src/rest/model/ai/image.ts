@@ -1,5 +1,4 @@
-import type { NextRequest } from 'next/server'
-import { after } from 'next/server'
+import type { Context } from 'hono'
 import { z } from 'zod/v4'
 
 import type { ImageGenerationDetails } from '@cared/providers'
@@ -20,7 +19,8 @@ import {
   selectTelemetryAttributes,
   stringifyForTelemetry,
 } from '../../../telemetry'
-import { authId, handleError, makeResponseJson, requestJson } from './language'
+import { waitUntil } from '../../../utils'
+import { authId, handleError } from './language'
 
 // Schema for ImageModelV2 call options
 const imageModelV2CallOptionsSchema = z.object({
@@ -41,9 +41,8 @@ const requestArgsSchema = z.object({
   payerOrganizationId: z.string().optional(),
 })
 
-export async function GET(req: NextRequest): Promise<Response> {
-  const searchParams = req.nextUrl.searchParams
-  const modelId = searchParams.get('modelId')
+export async function GET(c: Context): Promise<Response> {
+  const modelId = c.req.query('modelId')
   if (!modelId) {
     return new Response('`modelId` is required', {
       status: 400,
@@ -59,7 +58,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     ...modelConfig
   } = model
 
-  return makeResponseJson({
+  return Response.json({
     ...modelConfig,
     maxImagesPerCall:
       typeof maxImagesPerCall === 'function'
@@ -68,11 +67,11 @@ export async function GET(req: NextRequest): Promise<Response> {
   })
 }
 
-export async function POST(req: NextRequest): Promise<Response> {
+export async function POST(c: Context): Promise<Response> {
   try {
-    const validatedArgs = requestArgsSchema.safeParse(await requestJson(req))
+    const validatedArgs = requestArgsSchema.safeParse(await c.req.json())
     if (!validatedArgs.success) {
-      return makeResponseJson(
+      return Response.json(
         {
           error: z.prettifyError(validatedArgs.error),
         },
@@ -84,7 +83,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     const { modelId, payerOrganizationId, ...imageModelV2CallOptions } = validatedArgs.data
 
-    const auth = await authenticate()
+    const auth = await authenticate(c.req.raw.headers)
     if (!auth.isAuthenticated()) {
       return new Response('Unauthorized', { status: 401 })
     }
@@ -97,6 +96,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const expenseManager = ExpenseManager.from({
       auth: auth.auth!,
       payerOrganizationId,
+      waitUntil: waitUntil(c),
     })
 
     // Allow modelId without provider prefix
@@ -131,6 +131,7 @@ export async function POST(req: NextRequest): Promise<Response> {
             auth: auth.auth!,
             modelId,
             onlyByok: !modelInfo.chargeable,
+            waitUntil: waitUntil(c),
           })
         },
       })
@@ -224,7 +225,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
               const result = await model.doGenerate({
                 ...imageModelV2CallOptions,
-                abortSignal: req.signal,
+                abortSignal: c.req.raw.signal,
               } as any)
 
               details.generationTime = Math.max(
@@ -261,7 +262,7 @@ export async function POST(req: NextRequest): Promise<Response> {
                 }),
               )
 
-              return makeResponseJson(result)
+              return Response.json(result)
             } catch (error: any) {
               recordErrorOnSpan(span, error)
               lastError = error
@@ -295,7 +296,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     })
   } catch (error: any) {
     log.error('Call image model error', error)
-    return makeResponseJson(
+    return Response.json(
       {
         error:
           error instanceof Error
@@ -307,6 +308,6 @@ export async function POST(req: NextRequest): Promise<Response> {
       { status: 500 },
     )
   } finally {
-    after(langfuseSpanProcessor.forceFlush())
+    c.executionCtx.waitUntil(langfuseSpanProcessor.forceFlush())
   }
 }

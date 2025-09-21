@@ -40,8 +40,8 @@ import {
 import { Textarea } from '@cared/ui/components/textarea'
 
 import { ModelSelect } from '@/components/model-select'
+import { orpc } from '@/lib/orpc'
 import { stripIdPrefix } from '@/lib/utils'
-import { orpc } from '@/orpc/client'
 
 // Schema for app form values
 const createAppSchema = z.object({
@@ -68,7 +68,7 @@ export function CreateAppDialog({
 }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  
+
   const queryClient = useQueryClient()
 
   // Get models data for selection

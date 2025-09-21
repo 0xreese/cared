@@ -2,7 +2,7 @@ import { tool } from 'ai'
 import { z } from 'zod/v4'
 
 import { eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Artifact } from '@cared/db/schema'
 
 import type { Context } from '../context'
@@ -18,7 +18,7 @@ export const updateArtifact = (ctx: Context) =>
     execute: async ({ id, description }) => {
       const dataStream = ctx.dataStream!
 
-      const artifact = await db.query.Artifact.findFirst({
+      const artifact = await getDb().query.Artifact.findFirst({
         where: eq(Artifact.id, id),
       })
       if (!artifact) {

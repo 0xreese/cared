@@ -1,16 +1,16 @@
 import assert from 'assert'
-import { after } from 'next/server'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Decimal } from 'decimal.js'
 
 import type { GenerationDetails, ModelCallOptions, TypedModelInfo } from '@cared/providers'
 import { and, desc, eq, sql } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Credits, Expense, Member, Organization } from '@cared/db/schema'
 import { getKV } from '@cared/kv'
 import { computeGenerationCost, estimateGenerationCost } from '@cared/providers'
 
 import type { AuthObject } from '../auth'
+import type { WaitUntil } from '../utils'
 import { cfg } from '../config'
 import { triggerAutoRechargePaymentIntent } from './credits'
 
@@ -26,11 +26,20 @@ const freeQuotaRateLimit = new Ratelimit({
 })
 
 export class ExpenseManager {
-  static from({ auth, payerOrganizationId }: { auth: AuthObject; payerOrganizationId?: string }) {
+  static from({
+    auth,
+    payerOrganizationId,
+    waitUntil,
+  }: {
+    auth: AuthObject
+    payerOrganizationId?: string
+    waitUntil: WaitUntil
+  }) {
     if (auth.type === 'user') {
       return new ExpenseManager({
         userId: auth.userId,
         organizationId: payerOrganizationId,
+        waitUntil,
       })
     } else {
       if (payerOrganizationId) {
@@ -41,12 +50,14 @@ export class ExpenseManager {
         return new ExpenseManager({
           userId: auth.userId,
           appId: auth.type === 'appUser' ? auth.appId : undefined,
+          waitUntil,
         })
       } else {
         return new ExpenseManager({
           userId: auth.ownerId, // as member of organization
           organizationId: auth.organizationId,
           appId: auth.scope === 'app' ? auth.appId : undefined,
+          waitUntil,
         })
       }
     }
@@ -55,19 +66,23 @@ export class ExpenseManager {
   private readonly userId: string
   private readonly organizationId?: string
   private readonly appId?: string
+  private readonly waitUntil: WaitUntil
 
   constructor({
     userId,
     organizationId,
     appId,
+    waitUntil,
   }: {
     userId: string
     organizationId?: string
     appId?: string
+    waitUntil: WaitUntil
   }) {
     this.userId = userId
     this.organizationId = organizationId
     this.appId = appId
+    this.waitUntil = waitUntil
   }
 
   private creditsCandidates?: Credits[]
@@ -80,7 +95,7 @@ export class ExpenseManager {
     this.creditsCandidates = []
 
     if (this.organizationId) {
-      const credits = await db
+      const credits = await getDb()
         .select({
           credits: Credits,
         })
@@ -94,10 +109,10 @@ export class ExpenseManager {
     } else {
       const creditsArray: Credits[] = (
         await Promise.all([
-          db.query.Credits.findMany({
+          getDb().query.Credits.findMany({
             where: eq(Credits.userId, this.userId),
           }),
-          db
+          getDb()
             .select({
               credits: Credits,
             })
@@ -161,7 +176,7 @@ export class ExpenseManager {
       throw new Error('Model is not chargeable')
     }
 
-    after(async () => {
+    this.waitUntil(async () => {
       const creditsCandidates = await this.prepare()
 
       if (creditsCandidates.some((credits) => new Decimal(credits.credits).isNegative())) {
@@ -172,7 +187,7 @@ export class ExpenseManager {
 
       if (!cost?.isPositive()) {
         assert(this.hasFreeQuota())
-        await db.insert(Expense).values({
+        await getDb().insert(Expense).values({
           type: 'user',
           userId: this.userId,
           appId: this.appId,
@@ -204,18 +219,20 @@ export class ExpenseManager {
           continue
         }
 
-        await db.insert(Expense).values({
-          type: credits.type,
-          userId: credits.type === 'user' ? credits.userId! : this.userId,
-          organizationId: credits.organizationId,
-          appId: this.appId,
-          kind: 'generation',
-          cost: cost.toString(),
-          details,
-        })
+        await getDb()
+          .insert(Expense)
+          .values({
+            type: credits.type,
+            userId: credits.type === 'user' ? credits.userId! : this.userId,
+            organizationId: credits.organizationId,
+            appId: this.appId,
+            kind: 'generation',
+            cost: cost.toString(),
+            details,
+          })
 
         const updatedCredits = (
-          await db
+          await getDb()
             .update(Credits)
             .set({
               credits: sql`${Credits.credits} - ${cost.toString()}`,
@@ -237,18 +254,20 @@ export class ExpenseManager {
 
       assert(maxCredits, 'maxCredits should be defined if creditsCandidates is not empty')
 
-      await db.insert(Expense).values({
-        type: maxCredits.type,
-        userId: maxCredits.type === 'user' ? maxCredits.userId! : this.userId,
-        organizationId: maxCredits.organizationId,
-        appId: this.appId,
-        kind: 'generation',
-        cost: cost.toString(),
-        details,
-      })
+      await getDb()
+        .insert(Expense)
+        .values({
+          type: maxCredits.type,
+          userId: maxCredits.type === 'user' ? maxCredits.userId! : this.userId,
+          organizationId: maxCredits.organizationId,
+          appId: this.appId,
+          kind: 'generation',
+          cost: cost.toString(),
+          details,
+        })
 
       const updatedCredits = (
-        await db
+        await getDb()
           .update(Credits)
           .set({
             credits: sql`${Credits.credits} - ${cost.toString()}`,

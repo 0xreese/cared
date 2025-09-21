@@ -1,7 +1,9 @@
+import { vercel } from '@t3-oss/env-core/presets-zod'
 import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod/v4'
 
 export const env = createEnv({
+  extends: [vercel()],
   server: {
     ENCRYPTION_KEY: z
       .string()

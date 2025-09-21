@@ -28,10 +28,10 @@ import {
   FormMessage,
 } from '@cared/ui/components/form'
 import { Input } from '@cared/ui/components/input'
-
 import { CircleSpinner } from '@cared/ui/components/spinner'
+
 import { useReplaceRouteWithWorkspaceId } from '@/hooks/use-workspace'
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function CreateWorkspaceDialog({
   organizationId,
@@ -47,7 +47,6 @@ export function CreateWorkspaceDialog({
   const router = useRouter()
   const replaceRouteWithWorkspaceId = useReplaceRouteWithWorkspaceId()
 
-  
   const queryClient = useQueryClient()
 
   const form = useForm({
@@ -83,11 +82,7 @@ export function CreateWorkspaceDialog({
       },
       onError: (error) => {
         console.error('Failed to create workspace:', error)
-        toast.error(
-          error.data?.code === 'UNAUTHORIZED'
-            ? 'You must be logged in to create workspace'
-            : 'Failed to create workspace',
-        )
+        toast.error('Failed to create workspace')
       },
     }),
   )

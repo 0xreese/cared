@@ -1,16 +1,14 @@
 import assert from 'assert'
-import type { NextRequest } from 'next/server'
-import { after, NextResponse } from 'next/server'
+import type { Context } from 'hono'
 import { APICallError } from '@ai-sdk/provider'
 import Ajv from 'ajv'
 import { z } from 'zod/v4'
 
 import type { LanguageGenerationDetails } from '@cared/providers'
-import type { SuperJSONResult } from '@cared/shared'
 import log from '@cared/log'
 import { createCustomFetch } from '@cared/providers'
 import { getModel } from '@cared/providers/providers'
-import { serializeError, sharedV2ProviderOptionsSchema, SuperJSON } from '@cared/shared'
+import { serializeError, sharedV2ProviderOptionsSchema } from '@cared/shared'
 
 import type { AuthObject } from '../../../auth'
 import type { ProviderKeyState } from '../../../operation'
@@ -34,6 +32,7 @@ import {
   stringifyForTelemetry,
 } from '../../../telemetry'
 import { languageModelV2MessageSchema } from '../../../types'
+import { waitUntil } from '../../../utils'
 
 const ajv = new Ajv({ allErrors: true })
 
@@ -111,9 +110,8 @@ const requestArgsSchema = z.object({
   payerOrganizationId: z.string().optional(),
 })
 
-export async function GET(req: NextRequest): Promise<Response> {
-  const searchParams = req.nextUrl.searchParams
-  const modelId = searchParams.get('modelId')
+export async function GET(c: Context): Promise<Response> {
+  const modelId = c.req.query('modelId')
   if (!modelId) {
     return new Response('`modelId` is required', {
       status: 400,
@@ -131,7 +129,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     ...modelConfig
   } = model
 
-  return makeResponseJson({
+  return Response.json({
     ...modelConfig,
     supportedUrls: Object.entries(await supportedUrls).map(([mediaType, regexArray]) => [
       mediaType,
@@ -140,9 +138,9 @@ export async function GET(req: NextRequest): Promise<Response> {
   })
 }
 
-export async function POST(req: NextRequest): Promise<Response> {
+export async function POST(c: Context): Promise<Response> {
   try {
-    const validatedArgs = requestArgsSchema.safeParse(await requestJson(req))
+    const validatedArgs = requestArgsSchema.safeParse(await c.req.json())
     if (!validatedArgs.success) {
       return new Response(z.prettifyError(validatedArgs.error), { status: 400 })
     }
@@ -154,7 +152,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       ...languageModelV2CallOptions
     } = validatedArgs.data
 
-    const auth = await authenticate()
+    const auth = await authenticate(c.req.raw.headers)
     if (!auth.isAuthenticated()) {
       return new Response('Unauthorized', { status: 401 })
     }
@@ -167,6 +165,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const expenseManager = ExpenseManager.from({
       auth: auth.auth!,
       payerOrganizationId,
+      waitUntil: waitUntil(c),
     })
 
     // Allow modelId without provider prefix
@@ -198,20 +197,20 @@ export async function POST(req: NextRequest): Promise<Response> {
       expenseManager,
       auth: auth.auth!,
       isStream,
-      req,
+      c,
       telemetry,
       tracer,
     })
   } catch (error: any) {
     log.error('Call language model error', error)
-    return makeResponseJson(
+    return Response.json(
       {
         error: error.message ?? 'An unknown error occurred',
       },
       { status: 500 },
     )
   } finally {
-    after(langfuseSpanProcessor.forceFlush())
+    c.executionCtx.waitUntil(langfuseSpanProcessor.forceFlush())
   }
 }
 
@@ -221,7 +220,7 @@ async function processWithPolling({
   expenseManager,
   auth,
   isStream,
-  req,
+  c,
   telemetry,
   tracer,
 }: {
@@ -233,7 +232,7 @@ async function processWithPolling({
   expenseManager: ExpenseManager
   auth: AuthObject
   isStream: boolean
-  req: NextRequest
+  c: Context
   telemetry: TelemetrySettings
   tracer: Tracer
 }): Promise<Response> {
@@ -282,6 +281,7 @@ async function processWithPolling({
             auth,
             modelId,
             onlyByok: !modelInfo.chargeable,
+            waitUntil: waitUntil(c),
           })
         },
       })
@@ -293,7 +293,7 @@ async function processWithPolling({
 
         const callOptions = {
           ...languageModelV2CallOptions,
-          abortSignal: req.signal,
+          abortSignal: c.req.raw.signal,
         }
 
         await recordSpan({
@@ -479,18 +479,20 @@ async function processWithPolling({
     // Processing the stream asynchronously
     assert(writeChunk)
     assert(closeStream)
-    void process().catch(async (error) => {
-      const errorChunk = {
-        type: 'error',
-        // Serialize error to ensure it can be properly transferred across the network
-        error: error instanceof Error ? serializeError(error) : JSON.stringify(error),
-        errorSerialized: error instanceof Error,
-      }
-      await writeChunk(errorChunk)
-      await closeStream()
-    }).finally(() => {
-      after(langfuseSpanProcessor.forceFlush())
-    })
+    void process()
+      .catch(async (error) => {
+        const errorChunk = {
+          type: 'error',
+          // Serialize error to ensure it can be properly transferred across the network
+          error: error instanceof Error ? serializeError(error) : JSON.stringify(error),
+          errorSerialized: error instanceof Error,
+        }
+        await writeChunk(errorChunk)
+        await closeStream()
+      })
+      .finally(() => {
+        c.executionCtx.waitUntil(langfuseSpanProcessor.forceFlush())
+      })
 
     // Return the streaming response
     return new Response(responseStream, {
@@ -548,7 +550,7 @@ async function doGenerate({
     }),
   )
 
-  return makeResponseJson(gen)
+  return Response.json(gen)
 }
 
 async function doStream({
@@ -700,17 +702,6 @@ async function doStream({
 
     await writeChunk(part)
   }
-}
-
-export async function requestJson(request: NextRequest): Promise<object> {
-  return SuperJSON.deserialize((await request.json()) as SuperJSONResult)
-}
-
-export function makeResponseJson<JsonBody>(
-  body: JsonBody,
-  init?: ResponseInit,
-): NextResponse<SuperJSONResult> {
-  return NextResponse.json(SuperJSON.serialize(body), init)
 }
 
 export function handleError(

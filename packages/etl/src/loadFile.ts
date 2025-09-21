@@ -1,5 +1,4 @@
 import * as fs from 'node:fs'
-import type { BaseDocumentLoader } from '@langchain/core/document_loaders/base'
 import { CSVLoader } from '@langchain/community/document_loaders/fs/csv'
 import { DocxLoader } from '@langchain/community/document_loaders/fs/docx'
 import { EPubLoader } from '@langchain/community/document_loaders/fs/epub'
@@ -15,6 +14,7 @@ import { TextLoader } from 'langchain/document_loaders/fs/text'
 import mime from 'mime'
 import { v4 as uuid } from 'uuid'
 
+import type { BaseDocumentLoader } from '@langchain/core/document_loaders/base'
 import { env } from './env'
 
 export interface Document {

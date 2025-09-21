@@ -15,7 +15,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --",
-    "generate-schema": "pnpm with-env pnpm dlx @better-auth/cli generate -y --config ./src/server.ts --output ../db/src/generated/auth.ts && pnpm prettier --check --write ../db/src/generated/auth.ts"
+    "generate-schema": "pnpm with-env pnpm dlx @better-auth/cli generate -y --config ./src/server.tsx --output ../db/src/generated/auth.ts && pnpm prettier --check --write ../db/src/generated/auth.ts"
   },
   "devDependencies": {
     "@cared/eslint-config": "workspace:*",
@@ -27,13 +27,13 @@
   },
   "prettier": "@cared/prettier-config",
   "dependencies": {
-    "@better-auth/utils": "^0.2.6",
+    "@better-auth/utils": "^0.3.0",
     "@cared/db": "workspace:*",
     "@cared/email": "workspace:*",
     "@cared/kv": "workspace:*",
     "@cared/log": "workspace:*",
     "@cared/shared": "workspace:*",
-    "better-auth": "1.3.6",
+    "better-auth": "1.3.12",
     "better-auth-harmony": "^1.2.5",
     "validation-better-auth": "^1.3.4"
   }

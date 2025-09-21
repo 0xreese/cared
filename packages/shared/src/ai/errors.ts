@@ -624,7 +624,7 @@ class UnsupportedFunctionalityErrorSerializer extends AISDKErrorSerializer {
 }
 
 // Registry for all error serializers
-export const errorSerializerRegistry: { [key: string]: typeof SerializableError } = {
+export const errorSerializerRegistry: Record<string, typeof SerializableError> = {
   Error: ErrorSerializer,
   AISDKError: AISDKErrorSerializer,
   InvalidDataContentError: InvalidDataContentErrorSerializer,

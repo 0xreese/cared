@@ -1,6 +1,6 @@
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function useExpenses({
   organizationId,

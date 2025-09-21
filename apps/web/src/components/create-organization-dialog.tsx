@@ -18,10 +18,10 @@ import {
 } from '@cared/ui/components/dialog'
 import { Input } from '@cared/ui/components/input'
 import { Label } from '@cared/ui/components/label'
-
 import { CircleSpinner } from '@cared/ui/components/spinner'
+
+import { orpc } from '@/lib/orpc'
 import { stripIdPrefix } from '@/lib/utils'
-import { orpc } from '@/orpc/client'
 
 export function CreateOrganizationDialog({
   menu,
@@ -33,7 +33,7 @@ export function CreateOrganizationDialog({
   onSuccess?: () => void
 }) {
   const router = useRouter()
-  
+
   const queryClient = useQueryClient()
 
   const [name, setName] = useState('')

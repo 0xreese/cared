@@ -1,6 +1,7 @@
-
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { Apps } from './apps'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 /**
  * Apps page component

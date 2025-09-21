@@ -2,7 +2,7 @@ import { tool } from 'ai'
 import { z } from 'zod/v4'
 
 import { and, eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Agent, AgentVersion, App, AppVersion, Chat, DRAFT_VERSION, Memory } from '@cared/db/schema'
 import { getTextEmbeddingDimensions } from '@cared/providers'
 import { embed } from '@cared/providers/embed'
@@ -20,7 +20,7 @@ async function getEmbeddingModel(ctx: Context, scope: 'chat' | 'app') {
   // Get chat info if needed for chat scope
   const chat =
     scope === 'chat'
-      ? await db.query.Chat.findFirst({
+      ? await getDb().query.Chat.findFirst({
           where: eq(Chat.id, ctx.chatId),
         })
       : null
@@ -31,10 +31,10 @@ async function getEmbeddingModel(ctx: Context, scope: 'chat' | 'app') {
 
   // Get agent info
   const agent = ctx.preview
-    ? await db.query.AgentVersion.findFirst({
+    ? await getDb().query.AgentVersion.findFirst({
         where: and(eq(AgentVersion.agentId, ctx.agentId), eq(AgentVersion.version, DRAFT_VERSION)),
       })
-    : await db.query.Agent.findFirst({
+    : await getDb().query.Agent.findFirst({
         where: eq(Agent.id, ctx.agentId),
       })
 
@@ -44,10 +44,10 @@ async function getEmbeddingModel(ctx: Context, scope: 'chat' | 'app') {
 
   // Get app info
   const app = ctx.preview
-    ? await db.query.AppVersion.findFirst({
+    ? await getDb().query.AppVersion.findFirst({
         where: and(eq(AppVersion.appId, ctx.appId), eq(AppVersion.version, DRAFT_VERSION)),
       })
-    : await db.query.App.findFirst({
+    : await getDb().query.App.findFirst({
         where: eq(App.id, ctx.appId),
       })
 
@@ -78,7 +78,7 @@ function storeMemory(ctx: Context) {
       }
 
       const id = (
-        await db
+        await getDb()
           .insert(Memory)
           .values({
             userId: ctx.userId,

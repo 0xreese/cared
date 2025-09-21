@@ -1,6 +1,6 @@
 import type { ArtifactKind } from '@cared/db/schema'
 import { eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Artifact } from '@cared/db/schema'
 
 import type { Context } from '../context'
@@ -35,7 +35,7 @@ export function createArtifactHandler<T extends ArtifactKind>(config: {
     onCreateArtifact: async (args: CreateArtifactCallbackProps) => {
       const draftContent = await config.onCreateArtifact(args)
 
-      await db.insert(Artifact).values({
+      await getDb().insert(Artifact).values({
         id: args.id,
         version: Math.floor(Date.now() / 1000),
         userId: args.ctx.userId,
@@ -48,7 +48,7 @@ export function createArtifactHandler<T extends ArtifactKind>(config: {
     onUpdateArtifact: async (args: UpdateArtifactCallbackProps) => {
       const draftContent = await config.onUpdateArtifact(args)
 
-      await db
+      await getDb()
         .update(Artifact)
         .set({
           content: draftContent,

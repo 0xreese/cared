@@ -1,6 +1,6 @@
+import { HydrateClient } from '@/lib/orpc'
 import { addIdPrefix } from '@/lib/utils'
 import { App } from './app'
-import { HydrateClient } from '@/orpc/client'
 
 export default async function Page({
   params,

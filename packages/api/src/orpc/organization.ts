@@ -1,10 +1,9 @@
-import { headers } from 'next/headers'
 import { ORPCError } from '@orpc/server'
 import { z } from 'zod/v4'
 
 import type { OrganizationRole } from '@cared/auth'
 import type { Invitation } from '@cared/db/schema'
-import { auth } from '@cared/auth'
+import { auth, headers } from '@cared/auth'
 import { desc, eq } from '@cared/db'
 import { Member, Organization, User } from '@cared/db/schema'
 
@@ -51,8 +50,9 @@ export const organizationRouter = {
         // logo: z.url().optional(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const org = await auth.api.createOrganization({
+        headers: headers(context.headers),
         body: {
           name: input.name,
           slug: '', // slug will be set in `organizationCreation.beforeCreate`
@@ -107,11 +107,12 @@ export const organizationRouter = {
         organizationId: z.string().min(1).nullable(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       // NOTE: The method `auth.api.setActiveOrganization()` will set the session cookie.
       // However, since orpc cannot return headers here, the client must call `authClient.getSession()`
       // again with the parameter `{ disableCookieCache: true }` to refresh the session cookie.
       const org = await auth.api.setActiveOrganization({
+        headers: headers(context.headers),
         body: {
           organizationId: input.organizationId,
         },
@@ -135,9 +136,9 @@ export const organizationRouter = {
         id: z.string().min(1),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const organization = await auth.api.getFullOrganization({
-        headers: await headers(),
+        headers: headers(context.headers),
         query: { organizationId: input.id },
       })
       if (!organization) {
@@ -167,9 +168,9 @@ export const organizationRouter = {
         name: z.string().min(1).max(128),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const org = await auth.api.updateOrganization({
-        headers: await headers(),
+        headers: headers(context.headers),
         body: {
           organizationId: input.id,
           data: {
@@ -197,9 +198,9 @@ export const organizationRouter = {
         id: z.string().min(1),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       await auth.api.deleteOrganization({
-        headers: await headers(),
+        headers: headers(context.headers),
         body: { organizationId: input.id },
       })
     }),
@@ -220,8 +221,9 @@ export const organizationRouter = {
         resend: z.boolean().optional(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const inv = await auth.api.createInvitation({
+        headers: headers(context.headers),
         body: {
           organizationId: input.organizationId,
           email: input.email,
@@ -241,8 +243,9 @@ export const organizationRouter = {
       summary: 'Accept invitation',
     })
     .input(z.object({ invitationId: z.string().min(1) }))
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const res = await auth.api.acceptInvitation({
+        headers: headers(context.headers),
         body: { invitationId: input.invitationId },
       })
       if (!res) {
@@ -261,8 +264,9 @@ export const organizationRouter = {
       summary: 'Cancel invitation',
     })
     .input(z.object({ invitationId: z.string().min(1) }))
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const invitation = await auth.api.cancelInvitation({
+        headers: headers(context.headers),
         body: { invitationId: input.invitationId },
       })
       if (!invitation) {
@@ -281,8 +285,9 @@ export const organizationRouter = {
       summary: 'Reject invitation',
     })
     .input(z.object({ invitationId: z.string().min(1) }))
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const res = await auth.api.rejectInvitation({
+        headers: headers(context.headers),
         body: { invitationId: input.invitationId },
       })
       if (!res.invitation) {
@@ -303,7 +308,7 @@ export const organizationRouter = {
     .input(z.object({ invitationId: z.string().min(1) }))
     .handler(async ({ input, context }) => {
       const invitation = await auth.api.getInvitation({
-        headers: await headers(),
+        headers: headers(context.headers),
         query: { id: input.invitationId },
       })
       const inviter = await context.db.query.User.findFirst({
@@ -334,8 +339,9 @@ export const organizationRouter = {
       summary: 'List organization invitations',
     })
     .input(z.object({ organizationId: z.string().min(1) }))
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const invitations = await auth.api.listInvitations({
+        headers: headers(context.headers),
         query: { organizationId: input.organizationId },
       })
       return { invitations: invitations.map(formatInvitation) }
@@ -348,8 +354,10 @@ export const organizationRouter = {
       tags: ['organization'],
       summary: 'List user invitations',
     })
-    .handler(async () => {
-      const invitations = await auth.api.listUserInvitations({})
+    .handler(async ({ context }) => {
+      const invitations = await auth.api.listUserInvitations({
+        headers: headers(context.headers),
+      })
       return { invitations: invitations.map(formatInvitation) }
     }),
 
@@ -362,8 +370,9 @@ export const organizationRouter = {
       summary: 'List organization members',
     })
     .input(z.object({ organizationId: z.string().min(1) }))
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const res = await auth.api.listMembers({
+        headers: headers(context.headers),
         query: {
           organizationId: input.organizationId,
           sortBy: 'createdAt',
@@ -408,6 +417,7 @@ export const organizationRouter = {
       }
 
       const member = await auth.api.addMember({
+        headers: headers(context.headers),
         body: {
           organizationId: input.organizationId,
           userId: input.userId,
@@ -436,8 +446,9 @@ export const organizationRouter = {
         memberId: z.string().min(1),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const res = await auth.api.removeMember({
+        headers: headers(context.headers),
         body: {
           organizationId: input.organizationId,
           memberIdOrEmail: input.memberId,
@@ -465,8 +476,9 @@ export const organizationRouter = {
         role: z.enum(['admin', 'member']),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const member = await auth.api.updateMemberRole({
+        headers: headers(context.headers),
         body: { organizationId: input.organizationId, memberId: input.memberId, role: input.role },
       })
       return { member }
@@ -497,6 +509,7 @@ export const organizationRouter = {
 
       // First, update the target member's role to owner
       const newOwner = await auth.api.updateMemberRole({
+        headers: headers(context.headers),
         body: {
           organizationId: input.organizationId,
           memberId: input.memberId,
@@ -506,6 +519,7 @@ export const organizationRouter = {
 
       // Then, update the current user's role to member
       const previousOwner = await auth.api.updateMemberRole({
+        headers: headers(context.headers),
         body: {
           organizationId: input.organizationId,
           memberId: previousOwnerMember.id,
@@ -527,9 +541,9 @@ export const organizationRouter = {
       summary: 'Leave organization',
     })
     .input(z.object({ organizationId: z.string().min(1) }))
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const member = await auth.api.leaveOrganization({
-        headers: await headers(),
+        headers: headers(context.headers),
         body: { organizationId: input.organizationId },
       })
       return { member }

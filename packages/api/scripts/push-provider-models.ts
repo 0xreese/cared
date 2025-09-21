@@ -7,7 +7,7 @@ import type { ModelInfos, ProviderId } from '@cared/providers'
 // @ts-ignore
 import { and, eq } from '@cared/db'
 // @ts-ignore
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 // @ts-ignore
 import { ProviderModels } from '@cared/db/schema'
 import log from '@cared/log'
@@ -130,7 +130,7 @@ async function pushProviderModels(providerId: ProviderId, strategy: Strategy) {
   }
 
   // Check if provider models already exist in database
-  const existingRecord = await db.query.ProviderModels.findFirst({
+  const existingRecord = await getDb().query.ProviderModels.findFirst({
     where: and(eq(ProviderModels.providerId, providerId), eq(ProviderModels.isSystem, true)),
   })
 
@@ -205,7 +205,7 @@ async function pushProviderModels(providerId: ProviderId, strategy: Strategy) {
         ],
       }
 
-      await db
+      await getDb()
         .update(ProviderModels)
         .set({
           models: mergedModels,
@@ -263,7 +263,7 @@ async function pushProviderModels(providerId: ProviderId, strategy: Strategy) {
         textEmbeddingModels: textEmbeddingModelsResult.mergedModels,
       }
 
-      await db
+      await getDb()
         .update(ProviderModels)
         .set({
           models: mergedModels,
@@ -277,7 +277,7 @@ async function pushProviderModels(providerId: ProviderId, strategy: Strategy) {
       )
 
       // Replace strategy: Completely replace all models with new ones
-      await db
+      await getDb()
         .update(ProviderModels)
         .set({
           models: newModels,
@@ -289,7 +289,7 @@ async function pushProviderModels(providerId: ProviderId, strategy: Strategy) {
   } else {
     log.info(`Creating new provider models record for ${providerId}`)
 
-    await db.insert(ProviderModels).values({
+    await getDb().insert(ProviderModels).values({
       isSystem: true,
       providerId,
       models: newModels,

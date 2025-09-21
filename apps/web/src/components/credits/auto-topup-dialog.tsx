@@ -89,9 +89,11 @@ export function AutoTopupDialog({
       if (isAutoTopupEnabled) {
         // Update existing auto-recharge settings
         await Promise.all([
+          // eslint-disable-next-line @typescript-eslint/await-thenable
           autoRechargeThreshold > 0 &&
             autoRechargeAmount > 0 &&
             updateAutoRechargeSettings(true, autoRechargeThreshold, autoRechargeAmount),
+          // eslint-disable-next-line @typescript-eslint/await-thenable
           selectedPaymentMethodId && updateDefaultPaymentMethod(selectedPaymentMethodId),
         ])
       } else {

@@ -270,9 +270,7 @@ export function Models({
                     <p>
                       Provider ID: <span className="font-mono">{provider.id}</span>
                     </p>
-                    <p className="mt-4 min-h-8 md:min-h-16 line-clamp-3">
-                      {provider.description}
-                    </p>
+                    <p className="mt-4 min-h-8 md:min-h-16 line-clamp-3">{provider.description}</p>
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

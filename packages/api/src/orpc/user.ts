@@ -1,8 +1,7 @@
-import { headers } from 'next/headers'
 import { ORPCError } from '@orpc/server'
 import { z } from 'zod/v4'
 
-import { auth } from '@cared/auth'
+import { auth, headers } from '@cared/auth'
 import { and, desc, eq, inArray } from '@cared/db'
 import {
   Account,
@@ -45,7 +44,7 @@ export const userRouter = {
       }
 
       const session = await auth.api.getSession({
-        headers: await headers(),
+        headers: headers(context.headers),
       })
 
       if (input.auth && !session) {
@@ -91,7 +90,7 @@ export const userRouter = {
       }
 
       const sessions = (await auth.api.customListSessions({
-        headers: await headers(),
+        headers: headers(context.headers),
       })) as (typeof auth.$Infer.Session)['session'][]
 
       return {

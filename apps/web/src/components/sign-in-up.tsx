@@ -83,7 +83,7 @@ export function SignInUp({ mode }: SignInUpProps) {
   const [unverifiedEmail, setUnverifiedEmail] = useState('')
 
   const { user, isSuccess } = useSessionPublic()
-  const { redirectTo, createAuthUrl } = useAuthRedirect()
+  const { redirectTo, fullRedirectTo, createAuthUrl } = useAuthRedirect()
 
   // Initialize form based on mode
   const signUpForm = useForm<SignUpFormData>({
@@ -119,7 +119,7 @@ export function SignInUp({ mode }: SignInUpProps) {
     setIsLoading(provider)
     const { error } = await authClient.signIn.social({
       provider,
-      callbackURL: redirectTo,
+      callbackURL: fullRedirectTo,
     })
     if (error) {
       toast.error(error.message ?? error.statusText)
@@ -139,7 +139,7 @@ export function SignInUp({ mode }: SignInUpProps) {
         name: generateFromEmail(data.email, { stripLeadingDigits: true }),
         email: data.email,
         password: data.password,
-        callbackURL: redirectTo,
+        callbackURL: fullRedirectTo,
       })
       setIsLoading(undefined)
       if (error) {
@@ -160,7 +160,7 @@ export function SignInUp({ mode }: SignInUpProps) {
         email: data.email,
         password: data.password,
         rememberMe: true,
-        callbackURL: redirectTo,
+        callbackURL: fullRedirectTo,
       })
       setIsLoading(undefined)
       if (error) {
@@ -182,7 +182,7 @@ export function SignInUp({ mode }: SignInUpProps) {
     try {
       const { error } = await authClient.sendVerificationEmail({
         email: unverifiedEmail,
-        callbackURL: redirectTo,
+        callbackURL: fullRedirectTo,
       })
 
       if (error) {

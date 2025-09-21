@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Activity,
-  Boxes,
-  Brain,
-  CircleDollarSign,
-  Key,
-  Settings2,
-  Users,
-} from 'lucide-react'
+import { Activity, Boxes, Brain, CircleDollarSign, Key, Settings2, Users } from 'lucide-react'
 
 import { NavMain } from '@/components/app-sidebar/nav-main'
 

@@ -107,7 +107,9 @@ export interface PaymentMethodDisplayInfo {
  * Helper function to get payment method display info
  * Returns standardized display information for different payment method types
  */
-export function getPaymentMethodDisplayInfo(paymentMethod: Stripe.PaymentMethod): PaymentMethodDisplayInfo {
+export function getPaymentMethodDisplayInfo(
+  paymentMethod: Stripe.PaymentMethod,
+): PaymentMethodDisplayInfo {
   const type = paymentMethod.type
   const icon = getPaymentMethodIcon(type, paymentMethod.card?.brand)
 

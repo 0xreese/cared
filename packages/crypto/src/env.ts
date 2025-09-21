@@ -7,9 +7,7 @@ export const env = createEnv({
     HELIO_SECRET_API_KEY: z.string().min(1).optional(),
     NODE_ENV: z.enum(['development', 'production']).optional(),
   },
-  client: {
-  },
-  experimental__runtimeEnv: {
-  },
+  client: {},
+  experimental__runtimeEnv: {},
   skipValidation: !!process.env.CI || process.env.npm_lifecycle_event === 'lint',
 })

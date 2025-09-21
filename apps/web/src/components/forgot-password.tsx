@@ -28,9 +28,9 @@ import {
 } from '@cared/ui/components/form'
 import { Input } from '@cared/ui/components/input'
 import { Separator } from '@cared/ui/components/separator'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 
 import { EmailVerificationPrompt } from '@/components/email-verification-prompt'
-import { CircleSpinner } from '@cared/ui/components/spinner'
 import { useAuthRedirect } from '@/lib/auth-utils'
 
 // Forgot password form schema

@@ -1,9 +1,9 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { Boxes, ChevronsUpDown, Plus, UserIcon } from 'lucide-react'
 
 import { Button } from '@cared/ui/components/button'

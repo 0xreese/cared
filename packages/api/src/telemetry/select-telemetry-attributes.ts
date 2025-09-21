@@ -6,13 +6,13 @@ export function selectTelemetryAttributes({
   attributes,
 }: {
   telemetry?: TelemetrySettings
-  attributes: {
-    [attributeKey: string]:
-      | AttributeValue
-      | { input: () => AttributeValue | undefined }
-      | { output: () => AttributeValue | undefined }
-      | undefined
-  }
+  attributes: Record<
+    string,
+    | AttributeValue
+    | { input: () => AttributeValue | undefined }
+    | { output: () => AttributeValue | undefined }
+    | undefined
+  >
 }): Attributes {
   // when telemetry is disabled, return an empty object to avoid serialization overhead:
   if (telemetry?.isEnabled !== true) {

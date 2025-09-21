@@ -30,11 +30,10 @@ import {
 
 import { SectionTitle } from '@/components/section'
 import { useAccounts, useSession } from '@/hooks/use-session'
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 import { ChangePasswordDialog } from './change-password-dialog'
 
 export function Security() {
-  
   const { accounts } = useAccounts()
   const [isRevoking, setIsRevoking] = useState(false)
   const [showChangePasswordDialog, setShowChangePasswordDialog] = useState(false)

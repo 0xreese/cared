@@ -15,7 +15,7 @@ catalog:
   # The version of `zod` should be the same across all packages and dependencies.
   # Otherwise, you may get the following error:
   #   Type instantiation is excessively deep and possibly infinite
-  zod: ^3.25.51
+  zod: 4.1.11
   ai: 5.0.38
 
 catalogs:

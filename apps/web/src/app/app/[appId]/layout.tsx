@@ -7,10 +7,12 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { AppTopBar } from '@/components/app-topbar'
 import { ErrorFallback } from '@/components/error-fallback'
 import { Section } from '@/components/section'
+import { fetch, HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { prefetchAndCheckSession } from '@/lib/session'
 import { addIdPrefix } from '@/lib/utils'
 import { AppNavMain } from './nav-main'
-import { fetch, HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Layout({
   params,
@@ -36,7 +38,9 @@ export default async function Layout({
 
   await fetch(
     orpc.app.byId.queryOptions({
-      id: appId,
+      input: {
+        id: appId,
+      },
     }),
   )
 

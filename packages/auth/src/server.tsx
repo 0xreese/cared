@@ -1,5 +1,4 @@
 import type { Account as AuthAccount, BetterAuthOptions, LiteralUnion, Models } from 'better-auth'
-import { headers as nextHeaders } from 'next/headers'
 import { createRandomStringGenerator } from '@better-auth/utils/random'
 import { betterAuth } from 'better-auth'
 import { emailHarmony } from 'better-auth-harmony'
@@ -23,17 +22,16 @@ import { passkey } from 'better-auth/plugins/passkey'
 import { sha256 } from 'viem'
 
 import { eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Account, User } from '@cared/db/schema'
 import { emails, getEmailAddresses } from '@cared/email'
 import InvitationEmail from '@cared/email/emails/invitation-email'
 import ResetPasswordEmail from '@cared/email/emails/reset-password-email'
 import VerificationEmail from '@cared/email/emails/verification-email'
 import { getKV } from '@cared/kv'
-import log from '@cared/log'
 import { generateId } from '@cared/shared'
 
-import { getBaseUrl } from './client'
+import { getApiUrl, getWebUrl } from './client'
 import { env } from './env'
 import { orgAc, orgRoles } from './permissions'
 import { customPlugin } from './plugin'
@@ -46,15 +44,15 @@ const kv = getKV('auth', 'upstash')
 const serverIdName = 'x-server-call-mark'
 const serverId = sha256(new TextEncoder().encode(env.BETTER_AUTH_SECRET), 'hex')
 
-export async function headers() {
-  const headers = new Headers(await nextHeaders())
-  headers.set(serverIdName, serverId)
-  return headers
+export function headers(headers: Headers) {
+  const newHeaders = new Headers(headers)
+  newHeaders.set(serverIdName, serverId)
+  return newHeaders
 }
 
 const options = {
   appName: 'cared',
-  baseURL: getBaseUrl(),
+  baseURL: getApiUrl(),
   basePath: '/api/auth',
   secret: env.BETTER_AUTH_SECRET,
   session: {
@@ -165,7 +163,7 @@ const options = {
       allowDifferentEmails: false,
     },
   },
-  database: drizzleAdapter(db, {
+  database: drizzleAdapter(getDb(), {
     provider: 'pg',
   }),
   databaseHooks: {
@@ -179,7 +177,7 @@ const options = {
     },
   },
   secondaryStorage: kv,
-  trustedOrigins: env.BETTER_AUTH_TRUSTED_ORIGINS,
+  trustedOrigins: [getApiUrl(), getWebUrl(), ...(env.BETTER_AUTH_TRUSTED_ORIGINS ?? [])],
   rateLimit: {
     enabled: true,
     window: 10,
@@ -196,6 +194,13 @@ const options = {
       enabled: true,
     },
     cookiePrefix: 'cared',
+    ...(getWebUrl() !== getApiUrl() && {
+      defaultCookieAttributes: {
+        sameSite: 'none',
+        secure: true,
+        httpOnly: true,
+      },
+    }),
     database: {
       generateId: ({ model }: { model: LiteralUnion<Models, string> }) =>
         generateId(modelPrefix(model)),
@@ -245,7 +250,7 @@ const options = {
       cancelPendingInvitationsOnReInvite: true,
       requireEmailVerificationOnInvitation: true,
       async sendInvitationEmail(data) {
-        const inviteLink = `${getBaseUrl()}/org/accept-invitation/${data.id}`
+        const inviteLink = `${getWebUrl()}/org/accept-invitation/${data.id}`
         await emails.send({
           ...getEmailAddresses({
             from: 'hello',
@@ -323,7 +328,7 @@ const options = {
     nextCookies(),
   ],
   onAPIError: {
-    errorURL: undefined, // TODO
+    errorURL: getWebUrl() + '/auth/error',
   },
   hooks: {
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -398,7 +403,7 @@ const options = {
           update = true
           session.user.role = 'admin'
 
-          await db
+          await getDb()
             .update(User)
             .set({
               role: 'admin',
@@ -425,31 +430,11 @@ const options = {
     }),
   },
   logger: {
-    level: 'info',
+    disabled: false,
+    disableColors: false,
+    level: 'error',
     log: (level, message, ...args) => {
-      let levelLog
-      switch (level) {
-        case 'info':
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          levelLog = log.info
-          break
-        case 'warn':
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          levelLog = log.warn
-          break
-        case 'debug':
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          levelLog = log.debug
-          break
-        default:
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          levelLog = log.error
-          break
-      }
-      levelLog({
-        message,
-        args,
-      })
+      console.log(`[${level}] ${message}`, ...args)
     },
   },
   telemetry: { enabled: false },
@@ -470,22 +455,6 @@ export const auth = betterAuth({
   ],
 })
 
-Object.entries(auth.api).forEach(([key, _endpoint]) => {
-  const endpoint = async (args: any) => {
-    // @ts-ignore
-    return _endpoint({
-      ...args,
-      headers: await headers(),
-    })
-  }
-  Object.entries(_endpoint).forEach(([k, v]) => {
-    // @ts-ignore
-    endpoint[k] = v
-  })
-  // @ts-ignore
-  auth.api[key] = endpoint
-})
-
 async function cacheProfileForAccount(id: string, profile: Record<string, any>) {
   await kv.set(`profile:${id}`, JSON.stringify(profile), 60)
 }
@@ -497,7 +466,7 @@ async function getProfileForAccount(id: string): Promise<string | null | undefin
 async function updateProfileForAccount(account: AuthAccount) {
   const profile = await getProfileForAccount(account.accountId)
   if (profile) {
-    await db
+    await getDb()
       .update(Account)
       .set({
         profile,

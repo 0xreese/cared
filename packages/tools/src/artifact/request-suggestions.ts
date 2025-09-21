@@ -2,7 +2,7 @@ import { streamObject, tool } from 'ai'
 import { z } from 'zod/v4'
 
 import { eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Artifact, ArtifactSuggestion, generateArtifactSuggestionId } from '@cared/db/schema'
 
 import type { Context } from '../context'
@@ -17,7 +17,7 @@ export const requestSuggestions = (ctx: Context) =>
     execute: async ({ artifactId }) => {
       const dataStream = ctx.dataStream!
 
-      const artifact = await db.query.Artifact.findFirst({
+      const artifact = await getDb().query.Artifact.findFirst({
         where: eq(Artifact.id, artifactId),
       })
       if (!artifact?.content) {
@@ -63,7 +63,7 @@ export const requestSuggestions = (ctx: Context) =>
         suggestions.push(suggestion)
       }
 
-      await db.insert(ArtifactSuggestion).values(
+      await getDb().insert(ArtifactSuggestion).values(
         suggestions.map((suggestion) => ({
           ...suggestion,
           artifactVersion: artifact.version,

@@ -1,6 +1,5 @@
 'use client'
 
-import type { SocialProvider } from '@/lib/auth-providers'
 import { useRef, useState } from 'react'
 import * as React from 'react'
 import { LucideCheck, LucidePencil, LucidePlus, LucideX } from 'lucide-react'
@@ -26,9 +25,10 @@ import {
 } from '@cared/ui/components/dropdown-menu'
 import { Input } from '@cared/ui/components/input'
 import { Label } from '@cared/ui/components/label'
-
-import { SectionTitle } from '@/components/section'
 import { CircleSpinner } from '@cared/ui/components/spinner'
+
+import type { SocialProvider } from '@/lib/auth-providers'
+import { SectionTitle } from '@/components/section'
 import { useAccounts, useSession } from '@/hooks/use-session'
 import { allowedProviders, getAccountInfo } from '@/lib/auth-providers'
 

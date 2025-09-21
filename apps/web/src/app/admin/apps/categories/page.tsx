@@ -1,11 +1,14 @@
-
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { Categories } from './categories'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default function Page() {
   prefetch(
     orpc.app.listCategories.queryOptions({
-      limit: 100,
+      input: {
+        limit: 100,
+      }
     }),
   )
 

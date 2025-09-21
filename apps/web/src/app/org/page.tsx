@@ -1,6 +1,8 @@
+import { HydrateClient, orpcClient } from '@/lib/orpc'
 import { prefetchAndCheckSession } from '@/lib/session'
-import { HydrateClient, orpcClient } from '@/orpc/client'
 import { Redirect } from './redirect'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   if (!(await prefetchAndCheckSession())) {

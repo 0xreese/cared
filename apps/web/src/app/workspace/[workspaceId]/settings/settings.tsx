@@ -55,12 +55,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@cared/ui/components/select'
-
 import { CircleSpinner } from '@cared/ui/components/spinner'
+
 import { useActive } from '@/hooks/use-active'
 import { useMembers } from '@/hooks/use-members'
 import { useSession } from '@/hooks/use-session'
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 /**
  * General settings component for workspace
@@ -68,7 +68,7 @@ import { orpc } from '@/orpc/client'
  */
 export function Settings() {
   const router = useRouter()
-  
+
   const queryClient = useQueryClient()
 
   const { activeWorkspace, activeOrganization } = useActive()
@@ -229,7 +229,8 @@ export function Settings() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">Transfer Ownership</CardTitle>
           <CardDescription>
-            Transfer ownership of this workspace to another organization. This action cannot be undone.
+            Transfer ownership of this workspace to another organization. This action cannot be
+            undone.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-between">

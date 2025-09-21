@@ -1,6 +1,8 @@
 import { Models } from '@/components/models'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { addIdPrefix } from '@/lib/utils'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 /**
  * Models page component
@@ -11,12 +13,18 @@ export default async function Page({ params }: { params: Promise<{ organizationI
   const organizationId = addIdPrefix(orgIdNoPrefix, 'org')
 
   prefetch(orpc.model.listProviders.queryOptions())
-  prefetch(orpc.model.listModels.queryOptions({
-    organizationId
-  }))
+  prefetch(
+    orpc.model.listModels.queryOptions({
+      input: {
+        organizationId,
+      }
+    }),
+  )
   prefetch(
     orpc.providerKey.list.queryOptions({
-      organizationId,
+      input: {
+        organizationId,
+      }
     }),
   )
 

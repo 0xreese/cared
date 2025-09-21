@@ -4,18 +4,18 @@ import { toast } from 'sonner'
 
 import type { ProviderId, ProviderKey } from '@cared/providers'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function useProviderKeys(input?: { isSystem?: boolean; organizationId?: string }) {
-  
-
   const {
     data: { providerKeys },
     refetch: refetchProviderKeys,
   } = useSuspenseQuery(
     orpc.providerKey.list.queryOptions({
-      isSystem: input?.isSystem,
-      organizationId: input?.organizationId,
+      input: {
+        isSystem: input?.isSystem,
+        organizationId: input?.organizationId,
+      }
     }),
   )
 
@@ -60,7 +60,6 @@ export function useCreateProviderKey({
   isSystem?: boolean
   organizationId?: string
 }) {
-  
   const queryClient = useQueryClient()
 
   const createMutation = useMutation(
@@ -68,8 +67,10 @@ export function useCreateProviderKey({
       onSuccess: (_, variables) => {
         void queryClient.invalidateQueries({
           queryKey: orpc.providerKey.list.queryOptions({
-            isSystem: variables.isSystem,
-            organizationId: variables.organizationId,
+            input: {
+              isSystem: variables.isSystem,
+              organizationId: variables.organizationId,
+            }
           }).queryKey,
         })
       },
@@ -94,7 +95,6 @@ export function useCreateProviderKey({
 }
 
 export function useUpdateProviderKey() {
-  
   const queryClient = useQueryClient()
 
   const updateMutation = useMutation(
@@ -102,8 +102,10 @@ export function useUpdateProviderKey() {
       onSuccess: ({ providerKey }) => {
         void queryClient.invalidateQueries({
           queryKey: orpc.providerKey.list.queryOptions({
-            isSystem: providerKey.isSystem ?? undefined,
-            organizationId: providerKey.organizationId ?? undefined,
+            input: {
+              isSystem: providerKey.isSystem ?? undefined,
+              organizationId: providerKey.organizationId ?? undefined,
+            }
           }).queryKey,
         })
       },
@@ -124,7 +126,6 @@ export function useUpdateProviderKey() {
 }
 
 export function useDeleteProviderKey() {
-  
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(
@@ -132,8 +133,10 @@ export function useDeleteProviderKey() {
       onSuccess: ({ providerKey }) => {
         void queryClient.invalidateQueries({
           queryKey: orpc.providerKey.list.queryOptions({
-            isSystem: providerKey.isSystem ?? undefined,
-            organizationId: providerKey.organizationId ?? undefined,
+            input: {
+              isSystem: providerKey.isSystem ?? undefined,
+              organizationId: providerKey.organizationId ?? undefined,
+            }
           }).queryKey,
         })
       },

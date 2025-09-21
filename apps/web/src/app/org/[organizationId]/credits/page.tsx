@@ -1,6 +1,8 @@
 import { Credits } from '@/components/credits'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { addIdPrefix } from '@/lib/utils'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page({ params }: { params: Promise<{ organizationId: string }> }) {
   const { organizationId: organizationIdNoPrefix } = await params
@@ -8,7 +10,9 @@ export default async function Page({ params }: { params: Promise<{ organizationI
 
   prefetch(
     orpc.credits.getCredits.queryOptions({
-      organizationId,
+      input: {
+        organizationId,
+      }
     }),
   )
 

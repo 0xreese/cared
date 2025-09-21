@@ -31,16 +31,16 @@ import { Separator } from '@cared/ui/components/separator'
 import { CreateAppDialog } from '@/components/create-app-dialog'
 import { RemoteImage } from '@/components/image'
 import { useApps } from '@/hooks/use-app'
+import { orpc } from '@/lib/orpc'
 import { addIdPrefix, stripIdPrefix } from '@/lib/utils'
 import defaultLogo from '@/public/images/agent.png'
-import { orpc } from '@/orpc/client'
 
 // Constant for all categories filter value
 const ALL_CATEGORIES = 'all'
 
 export function Apps() {
   const router = useRouter()
-  
+
   const { workspaceId: workspaceIdNoPrefix } = useParams<{ workspaceId: string }>()
   const workspaceId = addIdPrefix(workspaceIdNoPrefix, 'workspace')
   const [searchTerm, setSearchTerm] = useState('')

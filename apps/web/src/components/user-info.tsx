@@ -1,9 +1,10 @@
 'use client'
 
-import type { User } from '@/hooks/use-session'
 import { UserIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@cared/ui/components/avatar'
+
+import type { User } from '@/hooks/use-session'
 
 export function UserInfo({
   user,

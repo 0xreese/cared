@@ -5,11 +5,9 @@ import { toast } from 'sonner'
 import type { UpdateModelArgs, UpdateModelsArgs } from '@cared/api'
 import type { ModelFullId, ModelType, ProviderId } from '@cared/providers'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function useDefaultModels() {
-  
-
   const {
     data: { defaultModels },
   } = useSuspenseQuery(orpc.model.listDefaultModels.queryOptions())
@@ -20,8 +18,6 @@ export function useDefaultModels() {
 }
 
 export function useProviders() {
-  
-
   const {
     data: { providers },
     refetch: refetchProviders,
@@ -38,8 +34,6 @@ export function useProvidersModels(input?: {
   type?: ModelType
   source?: 'system' | 'custom'
 }) {
-  
-
   const {
     data: { models },
     refetch: refetchProvidersModels,
@@ -56,8 +50,6 @@ export function useModels(input?: {
   type?: ModelType
   source?: 'system' | 'custom'
 }) {
-  
-
   const {
     data: { models },
     refetch: refetchModels,
@@ -76,7 +68,6 @@ export function useUpdateModel({
   isSystem?: boolean
   organizationId?: string
 }) {
-  
   const queryClient = useQueryClient()
 
   const updateMutation = useMutation(
@@ -131,7 +122,6 @@ export function useUpdateModels({
   isSystem?: boolean
   organizationId?: string
 }) {
-  
   const queryClient = useQueryClient()
 
   const updateMutation = useMutation(
@@ -186,7 +176,6 @@ export function useDeleteModel({
   isSystem?: boolean
   organizationId?: string
 }) {
-  
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(
@@ -237,7 +226,6 @@ export function useDeleteModels({
   isSystem?: boolean
   organizationId?: string
 }) {
-  
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(
@@ -288,7 +276,6 @@ export function useSortModels({
   isSystem?: boolean
   organizationId?: string
 }) {
-  
   const queryClient = useQueryClient()
 
   const sortMutation = useMutation(

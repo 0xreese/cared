@@ -11,8 +11,6 @@ import { Toaster } from '@cared/ui/components/sonner'
 
 import { Providers } from '@/components/providers'
 
-import '../orpc/server'
-
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

@@ -86,7 +86,7 @@ export function TraceGraphView({ trace, observations, selected, onSelect }: Trac
             if (a.nodeType === 'trace' || b.nodeType === 'trace') {
               return a.id.localeCompare(b.id)
             }
-            
+
             // Sort by start time if both have start times
             if (a.startTime && b.startTime) {
               return new Date(a.startTime).getTime() - new Date(b.startTime).getTime()

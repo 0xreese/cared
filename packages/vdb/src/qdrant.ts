@@ -1,4 +1,3 @@
-import type { Schemas } from '@qdrant/js-client-rest'
 import { QdrantClient } from '@qdrant/js-client-rest'
 import { Mutex } from 'async-mutex'
 
@@ -9,6 +8,7 @@ import type {
   MemoryWithEmbedding,
   SearchOptions,
 } from './base'
+import type { Schemas } from '@qdrant/js-client-rest'
 import { BaseVector } from './base'
 import { env } from './env'
 

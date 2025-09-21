@@ -1,6 +1,5 @@
 'use client'
 
-import type { PrivyClientConfig } from '@privy-io/react-auth'
 import type { ReactNode } from 'react'
 import { useMemo } from 'react'
 import Link from 'next/link'
@@ -13,11 +12,12 @@ import { useTheme } from 'next-themes'
 
 import { authClient } from '@cared/auth/client'
 
+import type { PrivyClientConfig } from '@privy-io/react-auth'
 import { Logo } from '@/components/logo'
 import { ThemeProvider } from '@/components/theme'
 import { env } from '@/env'
 import { usePrivyJwtAuth } from '@/hooks/use-privy'
-import { RPCReactProvider } from '@/orpc/client'
+import { RPCReactProvider } from '@/lib/orpc'
 
 export function Providers({ children }: { children: ReactNode }) {
   return (

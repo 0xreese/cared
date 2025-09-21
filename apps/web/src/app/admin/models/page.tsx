@@ -1,5 +1,7 @@
 import { Models } from '@/components/models'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
+
+export const dynamic = 'force-dynamic'
 
 /**
  * Models page component
@@ -7,12 +9,18 @@ import { HydrateClient, orpc, prefetch } from '@/orpc/client'
  */
 export default function Page() {
   prefetch(orpc.model.listProviders.queryOptions())
-  prefetch(orpc.model.listModels.queryOptions({
-    source: 'system'
-  }))
+  prefetch(
+    orpc.model.listModels.queryOptions({
+      input: {
+        source: 'system',
+      }
+    }),
+  )
   prefetch(
     orpc.providerKey.list.queryOptions({
-      isSystem: true,
+      input: {
+        isSystem: true,
+      }
     }),
   )
 

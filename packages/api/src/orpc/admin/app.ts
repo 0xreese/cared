@@ -276,7 +276,11 @@ export const appRouter = {
     .handler(async ({ context, input }) => {
       const { id, ...updates } = input
       // Find category by ID to ensure it exists
-      const [existing] = await context.db.select().from(Category).where(eq(Category.id, id)).limit(1)
+      const [existing] = await context.db
+        .select()
+        .from(Category)
+        .where(eq(Category.id, id))
+        .limit(1)
 
       if (!existing) {
         throw new ORPCError('NOT_FOUND', {

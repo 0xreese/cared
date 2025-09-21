@@ -29,10 +29,12 @@ export const env = createEnv({
     NODE_ENV: z.enum(['development', 'production']).optional(),
   },
   client: {
-    NEXT_PUBLIC_BASE_URL: z.string().optional(),
+    NEXT_PUBLIC_API_URL: z.string().optional(),
+    NEXT_PUBLIC_WEB_URL: z.string().optional(),
   },
   experimental__runtimeEnv: {
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
   },
   skipValidation: !!process.env.CI || process.env.npm_lifecycle_event === 'lint',
 })

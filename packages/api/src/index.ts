@@ -2,6 +2,7 @@ import type { AppRouter } from './orpc/router'
 import type { InferRouterInputs, InferRouterOutputs } from '@orpc/server'
 import { authenticate } from './auth'
 import { createORPCContext } from './orpc'
+import appRouterContract from './orpc/contract.json'
 import { appRouter } from './orpc/router'
 
 /**
@@ -20,10 +21,10 @@ type RouterInputs = InferRouterInputs<AppRouter>
  **/
 type RouterOutputs = InferRouterOutputs<AppRouter>
 
-export { createORPCContext, appRouter, authenticate }
+export { createORPCContext, appRouter, appRouterContract, authenticate }
 export type { AppRouter, RouterInputs, RouterOutputs }
 
 export * from './types'
 export * from './rest'
 export { registerTelemetry } from './telemetry'
-export type { ApiKeyMetadataInput, OptionalApiKeyMetadataInput } from './operation'
+export type { ApiKeyMetadataInput, OptionalApiKeyMetadataInput, S3Location } from './operation'

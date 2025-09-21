@@ -27,12 +27,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@cared/ui/components/select'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 import { Switch } from '@cared/ui/components/switch'
 
 import { Input } from '@/components/input'
 import { NumberInput, OptionalNumberInput } from '@/components/number-input'
 import { OptionalPriceInput } from '@/components/price-input'
-import { CircleSpinner } from '@cared/ui/components/spinner'
 
 export type EditableModel = {
   id: ModelFullId

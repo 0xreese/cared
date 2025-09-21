@@ -17,7 +17,7 @@ import {
 } from '@cared/ui/components/card'
 import { CircleSpinner } from '@cared/ui/components/spinner'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 /**
  * Admin Mock Page

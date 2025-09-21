@@ -12,6 +12,7 @@ import type {
   TranscriptionModelInfo,
 } from '@cared/providers'
 import { Button } from '@cared/ui/components/button'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 import {
   Table,
   TableBody,
@@ -23,7 +24,6 @@ import {
 import { cn } from '@cared/ui/lib/utils'
 
 import type { EditableModel } from './model-item-edit'
-import { CircleSpinner } from '@cared/ui/components/spinner'
 import { TextTooltip } from '@/components/tooltip'
 import { CopyModelId } from './copy-model-id'
 

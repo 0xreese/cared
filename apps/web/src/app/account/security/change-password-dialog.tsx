@@ -1,14 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { LucideAlertCircle, LucideEye, LucideEyeOff, LucideKey } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod/v4'
-import { LucideEye, LucideEyeOff, LucideKey, LucideAlertCircle } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 import { authClient } from '@cared/auth/client'
+import { Alert, AlertDescription } from '@cared/ui/components/alert'
 import { Button } from '@cared/ui/components/button'
 import {
   Dialog,
@@ -26,10 +27,12 @@ import {
   FormMessage,
 } from '@cared/ui/components/form'
 import { Input } from '@cared/ui/components/input'
-import { Alert, AlertDescription } from '@cared/ui/components/alert'
 
+import {
+  PasswordStrengthIndicator,
+  validatePasswordStrength,
+} from '@/components/password-strength-indicator'
 import { useAccounts } from '@/hooks/use-session'
-import { PasswordStrengthIndicator, validatePasswordStrength } from '@/components/password-strength-indicator'
 
 // Change password form schema with password strength validation
 const changePasswordSchema = z
@@ -76,7 +79,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
   const [newPassword, setNewPassword] = useState('')
 
   // Check if user has a credential account (email/password authentication)
-  const hasCredentialAccount = accounts.some(account => account.providerId === 'credential')
+  const hasCredentialAccount = accounts.some((account) => account.providerId === 'credential')
 
   const form = useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordSchema),
@@ -145,30 +148,25 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
               Set Password
             </DialogTitle>
             <DialogDescription>
-              You don't have a password set for your account yet. Use the forgot password flow to set your first password.
+              You don't have a password set for your account yet. Use the forgot password flow to
+              set your first password.
             </DialogDescription>
           </DialogHeader>
 
           <Alert>
             <LucideAlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Since you don't have a password set, you'll need to use the forgot password flow to set your first password.
-              This ensures your email is verified and your account is properly linked.
+              Since you don't have a password set, you'll need to use the forgot password flow to
+              set your first password. This ensures your email is verified and your account is
+              properly linked.
             </AlertDescription>
           </Alert>
 
           <div className="flex justify-end gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-            >
+            <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
-            <Button
-              type="button"
-              onClick={handleRedirectToForgotPassword}
-            >
+            <Button type="button" onClick={handleRedirectToForgotPassword}>
               Go to Forgot Password
             </Button>
           </div>
@@ -186,7 +184,8 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
             Change Password
           </DialogTitle>
           <DialogDescription>
-            Enter your current password and choose a new one. Other sessions will be revoked for security.
+            Enter your current password and choose a new one. Other sessions will be revoked for
+            security.
           </DialogDescription>
         </DialogHeader>
 
@@ -307,19 +306,10 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-                disabled={isLoading}
-              >
+              <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="min-w-[100px]"
-              >
+              <Button type="submit" disabled={isLoading} className="min-w-[100px]">
                 {isLoading ? 'Changing...' : 'Change Password'}
               </Button>
             </div>

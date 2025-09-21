@@ -30,6 +30,7 @@
     "drizzle-orm": "^0.38.4",
     "drizzle-zod": "^0.8.3",
     "nanoid": "^5.0.9",
+    "pg": "^8.16.3",
     "postgres": "^3.4.7",
     "zod": "catalog:"
   },
@@ -37,6 +38,7 @@
     "@cared/eslint-config": "workspace:*",
     "@cared/prettier-config": "workspace:*",
     "@cared/tsconfig": "workspace:*",
+    "@types/pg": "^8.15.5",
     "dotenv-cli": "^8.0.0",
     "drizzle-kit": "^0.30.6",
     "eslint": "catalog:",

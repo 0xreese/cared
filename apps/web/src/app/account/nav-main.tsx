@@ -1,6 +1,15 @@
 'use client'
 
-import { Activity, Bot, Brain, CircleDollarSign, Key, ShieldCheck, UserRound, Wallet } from 'lucide-react'
+import {
+  Activity,
+  Bot,
+  Brain,
+  CircleDollarSign,
+  Key,
+  ShieldCheck,
+  UserRound,
+  Wallet,
+} from 'lucide-react'
 
 import { NavMain } from '@/components/app-sidebar/nav-main'
 

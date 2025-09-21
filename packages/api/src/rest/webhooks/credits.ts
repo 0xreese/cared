@@ -1,47 +1,40 @@
+import type { Context } from 'hono'
 import type { Stripe } from 'stripe'
-import { headers } from 'next/headers'
-import { NextResponse } from 'next/server'
 import { Decimal } from 'decimal.js'
 import hash from 'stable-hash'
 
 import { eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Credits, CreditsOrder } from '@cared/db/schema'
 import log from '@cared/log'
 
 import { getStripe } from '../../client/stripe'
 import { env } from '../../env'
 
-export async function POST(req: Request) {
+export async function POST(c: Context): Promise<Response> {
   const stripe = getStripe()
 
   let event: Stripe.Event
 
   if (env.STRIPE_WEBHOOK_SECRET) {
     try {
-      const stripeSignature = (await headers()).get('stripe-signature')
+      const stripeSignature = c.req.header('stripe-signature')
       if (!stripeSignature) {
-        return NextResponse.json(
-          { message: 'Payment webhook error: Missing stripe-signature header' },
-          { status: 400 },
-        )
+        return c.json({ message: 'Payment webhook error: Missing stripe-signature header' }, 400)
       }
 
       event = stripe.webhooks.constructEvent(
-        await req.text(),
+        await c.req.text(),
         stripeSignature,
         env.STRIPE_WEBHOOK_SECRET,
       )
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error'
       console.log(`❌ Payment webhook error: ${errorMessage}`)
-      return NextResponse.json(
-        { message: `Payment webhook error: ${errorMessage}` },
-        { status: 400 },
-      )
+      return c.json({ message: `Payment webhook error: ${errorMessage}` }, 400)
     }
   } else {
-    event = (await req.json()) as Stripe.Event
+    event = await c.req.json()
   }
 
   try {
@@ -56,7 +49,7 @@ export async function POST(req: Request) {
             `Received checkout session event: ${event.type} for checkout session with id ${session.id}`,
           )
 
-          await db.transaction(async (tx) => {
+          await getDb().transaction(async (tx) => {
             const order = (
               await tx
                 .select()
@@ -217,7 +210,7 @@ export async function POST(req: Request) {
             `Received payment intent event: ${event.type} for payment intent with id ${paymentIntent.id}`,
           )
 
-          await db.transaction(async (tx) => {
+          await getDb().transaction(async (tx) => {
             const order = (
               await tx
                 .select()
@@ -318,7 +311,7 @@ export async function POST(req: Request) {
           const invoice = event.data.object
           log.info(`Received invoice event: ${event.type} for invoice with id ${invoice.id}`)
 
-          await db.transaction(async (tx) => {
+          await getDb().transaction(async (tx) => {
             const order = (
               await tx
                 .select()
@@ -407,9 +400,9 @@ export async function POST(req: Request) {
     }
   } catch (error) {
     console.log(error)
-    return NextResponse.json({ message: 'Webhook handler failed' }, { status: 500 })
+    return c.json({ message: 'Webhook handler failed' }, 500)
   }
 
   // Return a response to acknowledge receipt of the event.
-  return NextResponse.json({ message: 'Received' }, { status: 200 })
+  return c.json({ message: 'Received' }, 200)
 }

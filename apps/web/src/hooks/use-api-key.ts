@@ -4,11 +4,9 @@ import { toast } from 'sonner'
 
 import type { ApiKeyMetadataInput } from '@cared/api'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function useApiKeys() {
-
-
   const {
     data: { keys },
     refetch: refetchApiKeys,
@@ -84,7 +82,6 @@ export function useAppApiKeys(appId?: string) {
 }
 
 export function useCreateApiKey() {
-
   const queryClient = useQueryClient()
 
   const createMutation = useMutation(
@@ -115,7 +112,6 @@ export function useCreateApiKey() {
 }
 
 export function useRotateApiKey() {
-
   const queryClient = useQueryClient()
 
   const rotateMutation = useMutation(
@@ -142,7 +138,6 @@ export function useRotateApiKey() {
 }
 
 export function useDeleteApiKey() {
-
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(

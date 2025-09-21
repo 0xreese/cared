@@ -2,17 +2,17 @@ import { useCallback } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 /**
  * Hook to get customer information
  */
 export function useCustomer(organizationId?: string) {
-  
-
   const { data, refetch, isLoading } = useQuery({
     ...orpc.stripe.getCustomer.queryOptions({
-      organizationId,
+      input: {
+        organizationId,
+      }
     }),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: Infinity,
@@ -35,11 +35,11 @@ export function useDefaultPaymentMethodId(organizationId?: string) {
  * Hook to list payment methods for a customer
  */
 export function useListPaymentMethods(organizationId?: string) {
-  
-
   const { data, refetch, isLoading } = useQuery({
     ...orpc.stripe.listPaymentMethods.queryOptions({
-      organizationId,
+      input: {
+        organizationId,
+      }
     }),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: Infinity,
@@ -56,7 +56,6 @@ export function useListPaymentMethods(organizationId?: string) {
  * Hook to add a new payment method using SetupIntent
  */
 export function useAddPaymentMethod(organizationId?: string) {
-  
   const queryClient = useQueryClient()
 
   const addMutation = useMutation(
@@ -90,7 +89,6 @@ export function useAddPaymentMethod(organizationId?: string) {
  * Hook to remove a payment method
  */
 export function useRemovePaymentMethod(organizationId?: string) {
-  
   const queryClient = useQueryClient()
 
   const removeMutation = useMutation(
@@ -125,7 +123,6 @@ export function useRemovePaymentMethod(organizationId?: string) {
  * Hook to update customer's default payment method
  */
 export function useUpdateDefaultPaymentMethod(organizationId?: string) {
-  
   const queryClient = useQueryClient()
 
   const updateMutation = useMutation(

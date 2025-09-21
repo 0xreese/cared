@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
 
 import { showErrorToast, showSuccessToast } from '@/components/toast'
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function useTraces(input?: {
   userId?: string

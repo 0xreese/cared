@@ -1,8 +1,9 @@
-import type { LanguageModelV2 } from '@ai-sdk/provider'
 import type { LLM, LLMResponse, Message } from 'mem0ai/oss'
 import { generateText } from 'ai'
 
 import { getModel } from '@cared/providers/providers'
+
+import type { LanguageModelV2 } from '@ai-sdk/provider'
 
 export class CaredLLM implements LLM {
   private constructor(private model: LanguageModelV2) {}

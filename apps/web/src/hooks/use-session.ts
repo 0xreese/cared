@@ -3,13 +3,12 @@ import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-quer
 
 import { authClient } from '@cared/auth/client'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export type User = (typeof authClient.$Infer.Session)['user']
 export type Session = (typeof authClient.$Infer.Session)['session']
 
 function useRefetchSession() {
-  
   const queryClient = useQueryClient()
 
   return useCallback(async () => {
@@ -21,10 +20,12 @@ function useRefetchSession() {
       })
     ).data
 
-    queryClient.setQueryData(orpc.user.session.queryKey(), session)
+    // queryClient.setQueryData(orpc.user.session.queryKey(), session)
     queryClient.setQueryData(
       orpc.user.session.queryKey({
-        auth: false,
+        input: {
+          auth: false,
+        },
       }),
       session,
     )
@@ -33,13 +34,13 @@ function useRefetchSession() {
 }
 
 export function useSessionPublic() {
-  
-
   const refetchSession = useRefetchSession()
 
   const { data, isSuccess } = useQuery(
     orpc.user.session.queryOptions({
-      auth: false,
+      input: {
+        auth: false,
+      }
     }),
   )
   return {
@@ -61,8 +62,6 @@ export function useCheckSession() {
 }
 
 export function useSession() {
-  
-
   const refetchSession = useRefetchSession()
 
   const { data } = useSuspenseQuery(orpc.user.session.queryOptions())
@@ -75,8 +74,6 @@ export function useSession() {
 }
 
 export function useAccounts() {
-  
-
   const {
     data: { accounts },
     refetch: refetchAccounts,

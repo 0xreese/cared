@@ -1,7 +1,6 @@
 import { TracingWithSelector } from '@/components/tracing'
+import { HydrateClient } from '@/lib/orpc'
 import { addIdPrefix } from '@/lib/utils'
-
-import { HydrateClient } from '@/orpc/client'
 
 export default async function OrganizationTracingPage({
   params,

@@ -22,6 +22,7 @@ import { createVercel, vercel } from '@ai-sdk/vercel'
 import { createXai, xai } from '@ai-sdk/xai'
 import { createOpenRouter, openrouter } from '@openrouter/ai-sdk-provider'
 
+import type { ModelType, Provider, ProviderId, ProviderKey } from './types'
 import type {
   EmbeddingModelV2,
   ImageModelV2,
@@ -30,7 +31,7 @@ import type {
   TranscriptionModelV2,
 } from '@ai-sdk/provider'
 import { splitModelFullId } from './index'
-import { googleServiceAccountSchema, ModelType, Provider, ProviderId, ProviderKey } from './types'
+import { googleServiceAccountSchema } from './types'
 
 export const providers: Record<ProviderId, Provider> = {
   openai: openai,

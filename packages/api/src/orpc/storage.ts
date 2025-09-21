@@ -15,8 +15,7 @@ import {
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { ORPCError } from '@orpc/server'
-import { z } from 'zod'
-import { zfd } from 'zod-form-data'
+import { z } from 'zod/v4'
 
 import { log } from '@cared/log'
 
@@ -316,9 +315,9 @@ export const storageRouter = {
       summary: 'Upload an object directly to storage',
     })
     .input(
-      zfd.formData({
+      z.object({
         key: z.string().min(1, 'Key cannot be empty'),
-        file: zfd.file(),
+        file: z.file(),
       }),
     )
     .handler(async ({ context, input }) => {
@@ -411,11 +410,11 @@ export const storageRouter = {
           log.error('Bulk delete failed for some objects', response.Errors)
           // Decide how to report partial success/failure
           // Throwing an error indicating partial failure:
-        throw new ORPCError('INTERNAL_SERVER_ERROR', {
-          message: `Failed to delete ${response.Errors.length} object(s)`,
-          // Optionally include error details if safe
-          // cause: response.Errors,
-        })
+          throw new ORPCError('INTERNAL_SERVER_ERROR', {
+            message: `Failed to delete ${response.Errors.length} object(s)`,
+            // Optionally include error details if safe
+            // cause: response.Errors,
+          })
         }
         // Return the count of successfully deleted objects
         return { deleted: response.Deleted?.length ?? 0 }
@@ -523,12 +522,12 @@ export const storageRouter = {
       summary: 'Upload a part of a multipart upload',
     })
     .input(
-      zfd.formData({
+      z.object({
         key: z.string().min(1),
         uploadId: z.string().min(1),
         partNumber: z.number().int().min(1).max(10000), // S3 part number limits
         expiresIn: z.number().int().positive().optional().default(900), // Shorter default (15 min)
-        file: zfd.file(),
+        file: z.file(),
       }),
     )
     .handler(async ({ context, input }) => {

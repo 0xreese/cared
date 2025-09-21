@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { KeyIcon, UsersIcon } from 'lucide-react'
 
+import { SectionTitle } from '@/components/section'
 import { TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
 import NavTabs from './nav-tabs'
-import { SectionTitle } from '@/components/section'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

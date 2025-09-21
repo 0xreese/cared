@@ -1,7 +1,7 @@
 import type { HistoryManagerFactory } from 'mem0ai/oss'
 
 import { desc, eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Mem0History } from '@cared/db/schema'
 
 type HistoryManager = ReturnType<(typeof HistoryManagerFactory)['create']>
@@ -16,7 +16,7 @@ export class CaredHistoryManager implements HistoryManager {
     updatedAt?: string,
     isDeleted?: number,
   ): Promise<void> {
-    await db.insert(Mem0History).values({
+    await getDb().insert(Mem0History).values({
       memoryId,
       previousValue,
       newValue,
@@ -28,7 +28,7 @@ export class CaredHistoryManager implements HistoryManager {
   }
 
   async getHistory(memoryId: string): Promise<any[]> {
-    return await db
+    return await getDb()
       .select()
       .from(Mem0History)
       .where(eq(Mem0History.memoryId, memoryId))
@@ -36,7 +36,7 @@ export class CaredHistoryManager implements HistoryManager {
   }
 
   async reset(): Promise<void> {
-    await db.delete(Mem0History)
+    await getDb().delete(Mem0History)
   }
 
   close() {

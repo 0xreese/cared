@@ -2,8 +2,10 @@ import { Suspense } from 'react'
 
 import { ApiKeys } from '@/components/api-keys'
 import { SkeletonCard } from '@/components/skeleton'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { addIdPrefix } from '@/lib/utils'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function ApiKeyPage({ params }: { params: Promise<{ appId: string }> }) {
   const { appId: appIdNoPrefix } = await params

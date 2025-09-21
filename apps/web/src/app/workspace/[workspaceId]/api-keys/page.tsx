@@ -3,8 +3,10 @@ import { Suspense } from 'react'
 import { ApiKeysWithSelector } from '@/components/api-keys'
 import { SectionTitle } from '@/components/section'
 import { SkeletonCard } from '@/components/skeleton'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { addIdPrefix } from '@/lib/utils'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function WorkspaceApiKeyPage({
   params,

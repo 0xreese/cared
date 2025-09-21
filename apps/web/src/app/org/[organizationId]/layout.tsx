@@ -13,9 +13,11 @@ import { RememberOrganization } from '@/components/remember-organization'
 import { Section } from '@/components/section'
 import { getActiveOrganizationId } from '@/lib/active'
 import { lastWorkspaceCookieName } from '@/lib/cookie'
+import { fetch, HydrateClient, orpc, orpcClient, prefetch } from '@/lib/orpc'
 import { prefetchAndCheckSession } from '@/lib/session'
 import { stripIdPrefix } from '@/lib/utils'
-import { fetch, HydrateClient, orpc, orpcClient, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function OrganizationLayout({
   children,

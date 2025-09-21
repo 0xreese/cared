@@ -4,8 +4,8 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import { toast } from 'sonner'
 
 import { useSession, useSessionPublic } from '@/hooks/use-session'
+import { orpc } from '@/lib/orpc'
 import { stripIdPrefix } from '@/lib/utils'
-import { orpc } from '@/orpc/client'
 
 export type Organization = ReturnType<typeof useOrganizations>[number]
 
@@ -16,8 +16,6 @@ export function useLastOrganization() {
 
 export function useSetLastOrganization() {
   const { session, refetchSession } = useSessionPublic()
-
-  
 
   const setActiveMutation = useMutation(orpc.organization.setActive.mutationOptions())
 
@@ -45,8 +43,6 @@ export function useSetLastOrganization() {
 }
 
 export function useOrganizations() {
-  
-
   const {
     data: { organizations },
   } = useSuspenseQuery(orpc.organization.list.queryOptions())
@@ -59,7 +55,6 @@ export function useOrganizations() {
  * Provides mutation for updating organization name and other properties
  */
 export function useUpdateOrganization() {
-  
   const queryClient = useQueryClient()
 
   const updateMutation = useMutation(
@@ -89,7 +84,6 @@ export function useUpdateOrganization() {
  * Provides mutation for transferring ownership between members
  */
 export function useTransferOrganizationOwnership() {
-  
   const queryClient = useQueryClient()
 
   const transferMutation = useMutation(

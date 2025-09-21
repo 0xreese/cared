@@ -4,7 +4,7 @@ import { z } from 'zod/v4'
 
 import type { SQL } from '@cared/db'
 import type { OrderStatus } from '@cared/db/schema'
-import { getBaseUrl } from '@cared/auth/client'
+import { getWebUrl } from '@cared/auth/client'
 import { and, desc, eq, inArray, lt, lte } from '@cared/db'
 import { Credits, CreditsOrder, Member, orderKinds, Organization, User } from '@cared/db/schema'
 import log from '@cared/log'
@@ -176,7 +176,13 @@ export const creditsRouter = {
     )
     .handler(async ({ context, input }) => {
       if (input?.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions()
       }
 
@@ -206,7 +212,13 @@ export const creditsRouter = {
     )
     .handler(async ({ context, input }) => {
       if (input.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions()
       }
 
@@ -290,7 +302,13 @@ export const creditsRouter = {
     )
     .handler(async ({ context, input }) => {
       if (input.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions({ credits: ['delete'] })
       }
 
@@ -312,7 +330,13 @@ export const creditsRouter = {
     )
     .handler(async ({ context, input }) => {
       if (input.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions({ credits: ['create'] })
       }
 
@@ -428,7 +452,13 @@ export const creditsRouter = {
     )
     .handler(async ({ context, input }) => {
       if (input?.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions()
       }
 
@@ -463,7 +493,13 @@ export const creditsRouter = {
     )
     .handler(async ({ context, input }) => {
       if (input?.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions({ credits: ['create'] })
       }
 
@@ -486,7 +522,13 @@ export const creditsRouter = {
     )
     .handler(async ({ context, input }) => {
       if (input?.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions({ credits: ['create'] })
       }
 
@@ -536,7 +578,13 @@ export const creditsRouter = {
     .handler(async ({ context, input }) => {
       // Permission check: select permission based on operation type
       if (input.organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, input.organizationId)
+        const scope = OrganizationScope.fromOrganization(
+          {
+            headers: context.headers,
+            db: context.db,
+          },
+          input.organizationId,
+        )
         await scope.checkPermissions({ credits: ['update'] })
       }
 
@@ -570,5 +618,5 @@ export const creditsRouter = {
 
 export function getCreditsBaseUrl(organizationId?: string) {
   const segment = organizationId ? `org/${stripIdPrefix(organizationId)}` : 'account'
-  return `${getBaseUrl()}/${segment}/credits`
+  return `${getWebUrl()}/${segment}/credits`
 }

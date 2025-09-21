@@ -3,12 +3,10 @@ import { usePathname } from 'next/navigation'
 import { useSuspenseQuery } from '@tanstack/react-query'
 
 import { useWorkspaces } from '@/hooks/use-workspace'
+import { orpc } from '@/lib/orpc'
 import { stripIdPrefix } from '@/lib/utils'
-import { orpc } from '@/orpc/client'
 
 export function useAllApps() {
-
-
   const {
     data: { apps },
   } = useSuspenseQuery(orpc.app.list.queryOptions())

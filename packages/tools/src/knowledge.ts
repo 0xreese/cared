@@ -5,7 +5,7 @@ import { z } from 'zod/v4'
 import type { AgentMetadata, AppMetadata } from '@cared/db/schema'
 import type { Document } from '@cared/vdb'
 import { and, desc, eq, inArray, not } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import {
   Agent,
   AgentVersion,
@@ -31,33 +31,33 @@ async function updateMetadataBindings(
   if (scope === 'app') {
     if (!ctx.preview) {
       // In non-preview mode, update both main record and latest published version
-      await db
+      await getDb()
         .update(App)
         .set({ metadata: metadata as AppMetadata })
         .where(eq(App.id, ctx.appId))
 
-      const latestVersion = await db.query.AppVersion.findFirst({
+      const latestVersion = await getDb().query.AppVersion.findFirst({
         where: and(eq(AppVersion.appId, ctx.appId), not(eq(AppVersion.version, DRAFT_VERSION))),
         orderBy: desc(AppVersion.version),
       })
       assert(latestVersion, 'No published version found for app')
-      await db
+      await getDb()
         .update(AppVersion)
         .set({ metadata: metadata as AppMetadata })
         .where(and(eq(AppVersion.appId, ctx.appId), eq(AppVersion.version, latestVersion.version)))
     } else {
       // In preview mode, update draft version
-      await db
+      await getDb()
         .update(AppVersion)
         .set({ metadata: metadata as AppMetadata })
         .where(and(eq(AppVersion.appId, ctx.appId), eq(AppVersion.version, DRAFT_VERSION)))
 
       // If no published version exists, also update main record
-      const hasPublishedVersion = await db.query.AppVersion.findFirst({
+      const hasPublishedVersion = await getDb().query.AppVersion.findFirst({
         where: and(eq(AppVersion.appId, ctx.appId), not(eq(AppVersion.version, DRAFT_VERSION))),
       })
       if (!hasPublishedVersion) {
-        await db
+        await getDb()
           .update(App)
           .set({ metadata: metadata as AppMetadata })
           .where(eq(App.id, ctx.appId))
@@ -66,12 +66,12 @@ async function updateMetadataBindings(
   } else {
     if (!ctx.preview) {
       // In non-preview mode, update both main record and latest published version
-      await db
+      await getDb()
         .update(Agent)
         .set({ metadata: metadata as AgentMetadata })
         .where(eq(Agent.id, ctx.agentId))
 
-      const latestVersion = await db.query.AgentVersion.findFirst({
+      const latestVersion = await getDb().query.AgentVersion.findFirst({
         where: and(
           eq(AgentVersion.agentId, ctx.agentId),
           not(eq(AgentVersion.version, DRAFT_VERSION)),
@@ -79,7 +79,7 @@ async function updateMetadataBindings(
         orderBy: desc(AgentVersion.version),
       })
       assert(latestVersion, 'No published version found for agent')
-      await db
+      await getDb()
         .update(AgentVersion)
         .set({ metadata: metadata as AgentMetadata })
         .where(
@@ -90,20 +90,20 @@ async function updateMetadataBindings(
         )
     } else {
       // In preview mode, update draft version
-      await db
+      await getDb()
         .update(AgentVersion)
         .set({ metadata: metadata as AgentMetadata })
         .where(and(eq(AgentVersion.agentId, ctx.agentId), eq(AgentVersion.version, DRAFT_VERSION)))
 
       // If no published version exists, also update main record
-      const hasPublishedVersion = await db.query.AgentVersion.findFirst({
+      const hasPublishedVersion = await getDb().query.AgentVersion.findFirst({
         where: and(
           eq(AgentVersion.agentId, ctx.agentId),
           not(eq(AgentVersion.version, DRAFT_VERSION)),
         ),
       })
       if (!hasPublishedVersion) {
-        await db
+        await getDb()
           .update(Agent)
           .set({ metadata: metadata as AgentMetadata })
           .where(eq(Agent.id, ctx.agentId))
@@ -129,23 +129,23 @@ function listKnowledgeBases(ctx: Context) {
       if (scope === 'app') {
         // Get app metadata
         const app = ctx.preview
-          ? await db.query.AppVersion.findFirst({
+          ? await getDb().query.AppVersion.findFirst({
               where: and(eq(AppVersion.appId, ctx.appId), eq(AppVersion.version, DRAFT_VERSION)),
             })
-          : await db.query.App.findFirst({
+          : await getDb().query.App.findFirst({
               where: eq(App.id, ctx.appId),
             })
         metadata = app?.metadata
       } else {
         // Get agent metadata
         const agent = ctx.preview
-          ? await db.query.AgentVersion.findFirst({
+          ? await getDb().query.AgentVersion.findFirst({
               where: and(
                 eq(AgentVersion.agentId, ctx.agentId),
                 eq(AgentVersion.version, DRAFT_VERSION),
               ),
             })
-          : await db.query.Agent.findFirst({
+          : await getDb().query.Agent.findFirst({
               where: eq(Agent.id, ctx.agentId),
             })
         metadata = agent?.metadata
@@ -158,7 +158,7 @@ function listKnowledgeBases(ctx: Context) {
       }
 
       // Get all existing datasets
-      const datasets = await db.query.Dataset.findMany({
+      const datasets = await getDb().query.Dataset.findMany({
         where: inArray(Dataset.id, datasetIds),
       })
 
@@ -202,7 +202,7 @@ function searchKnowledge(_ctx: Context) {
         ),
     }),
     execute: async ({ query, knowledgeBaseId }) => {
-      const dataset = await db.query.Dataset.findFirst({
+      const dataset = await getDb().query.Dataset.findFirst({
         where: eq(Dataset.id, knowledgeBaseId),
       })
       if (!dataset) {
@@ -263,7 +263,7 @@ function searchKnowledge(_ctx: Context) {
       const rerankedDocuments = rerankedResults.documents.map(({ index }) => results[index]!)
 
       // Get DocumentSegments for the chunks
-      const documentSegments = await db
+      const documentSegments = await getDb()
         .select({
           content: DocumentSegment.content,
         })

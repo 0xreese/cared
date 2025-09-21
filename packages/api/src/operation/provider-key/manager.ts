@@ -1,14 +1,14 @@
 import assert from 'assert'
-import { after } from 'next/server'
 
 import type { ModelFullId, ProviderId, ProviderKey as ProviderKeyContent } from '@cared/providers'
 import { and, desc, eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { ProviderKey } from '@cared/db/schema'
 import { getKV, sha1 } from '@cared/kv'
 import { splitModelFullId } from '@cared/providers'
 
 import type { AuthObject } from '../../auth'
+import type { WaitUntil } from '../../utils'
 import type { DeleteKeysByPrefixResult } from './lua-script'
 import { decryptProviderKey } from './encryption'
 import { deleteKeysByPrefixScript, providerKeysStatesScript } from './lua-script'
@@ -39,20 +39,24 @@ export class ProviderKeyManager {
     private systemKeys: ProviderKeyState[],
     private userOrOrgKeys: ProviderKeyState[],
     private onlyByok: boolean,
+    private waitUntil: WaitUntil,
   ) {}
 
   static async from({
     auth,
     modelId: modelFullId,
     onlyByok,
+    waitUntil,
   }: {
     auth: AuthObject
     modelId: ModelFullId
     onlyByok: boolean
+    waitUntil: WaitUntil
   }) {
     const { providerId } = splitModelFullId(modelFullId)
 
     const [systemKeysStateStr, userOrOrgKeysStateStr] = await Promise.all([
+      // eslint-disable-next-line @typescript-eslint/await-thenable
       !onlyByok ? kv.redis.json.get(kv.key(systemKeysStateKey(modelFullId))) : null,
       kv.redis.json.get(kv.key(userOrOrgKeysStateKey(auth, modelFullId))),
     ])
@@ -68,7 +72,7 @@ export class ProviderKeyManager {
       shouldCacheSystemKeys = true
 
       if (!onlyByok) {
-        const keys = await db
+        const keys = await getDb()
           .select()
           .from(ProviderKey)
           .where(and(eq(ProviderKey.providerId, providerId), eq(ProviderKey.isSystem, true)))
@@ -89,7 +93,7 @@ export class ProviderKeyManager {
     if (!userOrOrgKeysState) {
       shouldCacheUserOrOrgKeys = true
 
-      const keys = await db
+      const keys = await getDb()
         .select()
         .from(ProviderKey)
         .where(
@@ -127,6 +131,7 @@ export class ProviderKeyManager {
         })),
       ),
       onlyByok,
+      waitUntil,
     )
 
     if (shouldCacheSystemKeys) {
@@ -315,7 +320,7 @@ export class ProviderKeyManager {
   private savingPromise: Promise<any> | undefined = undefined
 
   saveState() {
-    after(async () => {
+    this.waitUntil(async () => {
       // Clear changes after saving
       const systemKeysChanges = this.systemKeysChanges
       const userOrOrgKeysChanges = this.userOrOrgKeysChanges
@@ -338,6 +343,7 @@ export class ProviderKeyManager {
 
       try {
         this.savingPromise = Promise.all([
+          // eslint-disable-next-line @typescript-eslint/await-thenable
           systemKeysChanges.length > 0 &&
             kv.eval(
               scripts.providerKeysStates,
@@ -349,6 +355,7 @@ export class ProviderKeyManager {
                 }),
               ],
             ),
+          // eslint-disable-next-line @typescript-eslint/await-thenable
           userOrOrgKeysChanges.length > 0 &&
             kv.eval(
               scripts.providerKeysStates,

@@ -323,9 +323,9 @@ export const modelRouter = {
             .returning()
         )[0]
         if (!providerModels) {
-throw new ORPCError('INTERNAL_SERVER_ERROR', {
-          message: 'Failed to create provider models record',
-        })
+          throw new ORPCError('INTERNAL_SERVER_ERROR', {
+            message: 'Failed to create provider models record',
+          })
         }
       }
 
@@ -420,9 +420,9 @@ throw new ORPCError('INTERNAL_SERVER_ERROR', {
             .returning()
         )[0]
         if (!providerModels) {
-throw new ORPCError('INTERNAL_SERVER_ERROR', {
-          message: 'Failed to create provider models record',
-        })
+          throw new ORPCError('INTERNAL_SERVER_ERROR', {
+            message: 'Failed to create provider models record',
+          })
         }
       }
 
@@ -532,9 +532,9 @@ throw new ORPCError('INTERNAL_SERVER_ERROR', {
       const validatedModelIds = input.ids.map((id) => {
         const { providerId, modelId } = splitModelFullId(id)
         if (providerId !== input.providerId) {
-        throw new ORPCError('BAD_REQUEST', {
-          message: `Model id ${id} has providerId ${providerId}, but expected ${input.providerId}`,
-        })
+          throw new ORPCError('BAD_REQUEST', {
+            message: `Model id ${id} has providerId ${providerId}, but expected ${input.providerId}`,
+          })
         }
         return modelId
       })
@@ -693,9 +693,9 @@ throw new ORPCError('INTERNAL_SERVER_ERROR', {
       const modelIds = input.ids.map((id) => {
         const { providerId, modelId } = splitModelFullId(id)
         if (providerId !== input.providerId) {
-        throw new ORPCError('BAD_REQUEST', {
-          message: `Model id ${id} has providerId ${providerId}, but expected ${input.providerId}`,
-        })
+          throw new ORPCError('BAD_REQUEST', {
+            message: `Model id ${id} has providerId ${providerId}, but expected ${input.providerId}`,
+          })
         }
         return modelId
       })
@@ -761,7 +761,7 @@ async function checkPermissions(context: Context, organizationId?: string, isSys
     case 'user':
     case 'appUser':
       if (organizationId) {
-        const scope = OrganizationScope.fromOrganization({ db: context.db }, organizationId)
+        const scope = OrganizationScope.fromOrganization({ headers: context.headers, db: context.db }, organizationId)
         await scope.checkPermissions()
       } else {
         if (isSystem && auth.type === 'user' && !auth.isAdmin) {
@@ -774,7 +774,7 @@ async function checkPermissions(context: Context, organizationId?: string, isSys
       switch (auth.scope) {
         case 'user':
           if (organizationId) {
-            const scope = OrganizationScope.fromOrganization({ db: context.db }, organizationId)
+            const scope = OrganizationScope.fromOrganization({ headers: context.headers, db: context.db }, organizationId)
             await scope.checkPermissions()
           } else {
             if (isSystem && !auth.isAdmin) {

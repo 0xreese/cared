@@ -29,9 +29,12 @@ import {
 } from '@cared/ui/components/form'
 import { Input } from '@cared/ui/components/input'
 import { Separator } from '@cared/ui/components/separator'
-
 import { CircleSpinner } from '@cared/ui/components/spinner'
-import { PasswordStrengthIndicator, validatePasswordStrength } from '@/components/password-strength-indicator'
+
+import {
+  PasswordStrengthIndicator,
+  validatePasswordStrength,
+} from '@/components/password-strength-indicator'
 import { useAuthRedirect } from '@/lib/auth-utils'
 
 // Reset password form schema with password strength validation
@@ -284,7 +287,10 @@ export function ResetPassword() {
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
                 Remember your password?{' '}
-                <Link href={createAuthUrl('/auth/sign-in')} className="text-primary hover:underline font-medium">
+                <Link
+                  href={createAuthUrl('/auth/sign-in')}
+                  className="text-primary hover:underline font-medium"
+                >
                   Sign in
                 </Link>
               </p>

@@ -1,17 +1,17 @@
 import { useCallback } from 'react'
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 // Query hooks
 export function useMembers(organizationId = '') {
-  
-
   const {
     data: { members },
   } = useSuspenseQuery(
     orpc.organization.listMembers.queryOptions({
-      organizationId,
+      input: {
+        organizationId,
+      }
     }),
   )
 
@@ -19,13 +19,13 @@ export function useMembers(organizationId = '') {
 }
 
 export function useInvitations(organizationId: string) {
-  
-
   const {
     data: { invitations },
   } = useSuspenseQuery(
     orpc.organization.listInvitations.queryOptions({
-      organizationId,
+      input: {
+        organizationId,
+      }
     }),
   )
 
@@ -34,7 +34,6 @@ export function useInvitations(organizationId: string) {
 
 // Mutation hooks
 export function useAddMember() {
-  
   const queryClient = useQueryClient()
 
   const mutation = useMutation(
@@ -43,7 +42,9 @@ export function useAddMember() {
         // Invalidate members list for the specific organization
         void queryClient.invalidateQueries({
           queryKey: orpc.organization.listMembers.queryOptions({
-            organizationId: variables.organizationId,
+            input: {
+              organizationId: variables.organizationId,
+            }
           }).queryKey,
         })
       },
@@ -61,7 +62,6 @@ export function useAddMember() {
 }
 
 export function useRemoveMember() {
-  
   const queryClient = useQueryClient()
 
   const mutation = useMutation(
@@ -70,7 +70,9 @@ export function useRemoveMember() {
         // Invalidate members list for the specific organization
         void queryClient.invalidateQueries({
           queryKey: orpc.organization.listMembers.queryOptions({
-            organizationId: variables.organizationId,
+            input: {
+              organizationId: variables.organizationId,
+            }
           }).queryKey,
         })
       },
@@ -87,7 +89,6 @@ export function useRemoveMember() {
 }
 
 export function useUpdateMemberRole() {
-  
   const queryClient = useQueryClient()
 
   const mutation = useMutation(
@@ -96,7 +97,9 @@ export function useUpdateMemberRole() {
         // Invalidate members list for the specific organization
         void queryClient.invalidateQueries({
           queryKey: orpc.organization.listMembers.queryOptions({
-            organizationId: variables.organizationId,
+            input: {
+              organizationId: variables.organizationId,
+            }
           }).queryKey,
         })
       },
@@ -114,7 +117,6 @@ export function useUpdateMemberRole() {
 }
 
 export function useCreateInvitation() {
-  
   const queryClient = useQueryClient()
 
   const mutation = useMutation(
@@ -123,7 +125,9 @@ export function useCreateInvitation() {
         // Invalidate invitations list for the specific organization
         void queryClient.invalidateQueries({
           queryKey: orpc.organization.listInvitations.queryOptions({
-            organizationId: variables.organizationId,
+            input: {
+              organizationId: variables.organizationId,
+            }
           }).queryKey,
         })
       },
@@ -140,7 +144,6 @@ export function useCreateInvitation() {
 }
 
 export function useCancelInvitation() {
-  
   const queryClient = useQueryClient()
 
   const mutation = useMutation(
@@ -149,7 +152,9 @@ export function useCancelInvitation() {
         // Invalidate invitations list for the specific organization
         void queryClient.invalidateQueries({
           queryKey: orpc.organization.listInvitations.queryOptions({
-            organizationId: data.invitation.organizationId,
+            input: {
+              organizationId: data.invitation.organizationId,
+            }
           }).queryKey,
         })
       },

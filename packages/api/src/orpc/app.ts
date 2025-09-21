@@ -30,8 +30,7 @@ import { OrganizationScope } from '../auth'
 import { s3Client } from '../client/s3'
 import { cfg } from '../config'
 import { env } from '../env'
-import { AppOperator } from '../operation'
-import { parseS3Url } from '../rest/s3-upload/route'
+import { AppOperator, parseS3Url } from '../operation'
 import { protectedProcedure, publicProcedure } from '../orpc'
 import { deleteImages } from './utils'
 
@@ -763,7 +762,7 @@ export const appRouter = {
         })
       }
 
-      const operator = new AppOperator(app.id)
+      const operator = new AppOperator(context, app.id)
 
       await operator.delete()
     }),

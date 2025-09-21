@@ -8,19 +8,16 @@ export const user = pgTable(
     id: text('id').primaryKey(),
     name: text('name').notNull(),
     email: text('email').notNull().unique(),
-    emailVerified: boolean('email_verified')
-      .$defaultFn(() => false)
-      .notNull(),
+    emailVerified: boolean('email_verified').default(false).notNull(),
     image: text('image'),
-    createdAt: timestamp('created_at')
-      .$defaultFn(() => /* @__PURE__ */ new Date())
-      .notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')
-      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
-    twoFactorEnabled: boolean('two_factor_enabled'),
+    twoFactorEnabled: boolean('two_factor_enabled').default(false),
     role: text('role'),
-    banned: boolean('banned'),
+    banned: boolean('banned').default(false),
     banReason: text('ban_reason'),
     banExpires: timestamp('ban_expires'),
     normalizedEmail: text('normalized_email').unique(),
@@ -66,8 +63,10 @@ export const account = pgTable(
     refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
     scope: text('scope'),
     password: text('password'),
-    createdAt: timestamp('created_at').notNull(),
-    updatedAt: timestamp('updated_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
     profile: text('profile'),
   },
   (table) => [
@@ -84,8 +83,11 @@ export const verification = pgTable(
     identifier: text('identifier').notNull(),
     value: text('value').notNull(),
     expiresAt: timestamp('expires_at').notNull(),
-    createdAt: timestamp('created_at').$defaultFn(() => /* @__PURE__ */ new Date()),
-    updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date()),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
   },
   (table) => [
     index().on(table.identifier),
@@ -116,7 +118,7 @@ export const passkey = pgTable(
     userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
-    credentialID: text('credential_i_d').notNull(),
+    credentialID: text('credential_id').notNull(),
     counter: integer('counter').notNull(),
     deviceType: text('device_type').notNull(),
     backedUp: boolean('backed_up').notNull(),
@@ -217,7 +219,7 @@ export const team = pgTable(
       .notNull()
       .references(() => organization.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at').notNull(),
-    updatedAt: timestamp('updated_at'),
+    updatedAt: timestamp('updated_at').$onUpdate(() => /* @__PURE__ */ new Date()),
   },
   (table) => [
     index().on(table.organizationId),
@@ -251,10 +253,10 @@ export const oauthApplication = pgTable(
     metadata: text('metadata'),
     clientId: text('client_id').unique(),
     clientSecret: text('client_secret'),
-    redirectURLs: text('redirect_u_r_ls'),
+    redirectURLs: text('redirect_urls'),
     type: text('type'),
-    disabled: boolean('disabled'),
-    userId: text('user_id'),
+    disabled: boolean('disabled').default(false),
+    userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at'),
     updatedAt: timestamp('updated_at'),
   },
@@ -273,8 +275,10 @@ export const oauthAccessToken = pgTable(
     refreshToken: text('refresh_token').unique(),
     accessTokenExpiresAt: timestamp('access_token_expires_at'),
     refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
-    clientId: text('client_id'),
-    userId: text('user_id'),
+    clientId: text('client_id').references(() => oauthApplication.clientId, {
+      onDelete: 'cascade',
+    }),
+    userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }),
     scopes: text('scopes'),
     createdAt: timestamp('created_at'),
     updatedAt: timestamp('updated_at'),
@@ -292,8 +296,10 @@ export const oauthConsent = pgTable(
   'oauth_consent',
   {
     id: text('id').primaryKey(),
-    clientId: text('client_id'),
-    userId: text('user_id'),
+    clientId: text('client_id').references(() => oauthApplication.clientId, {
+      onDelete: 'cascade',
+    }),
+    userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }),
     scopes: text('scopes'),
     createdAt: timestamp('created_at'),
     updatedAt: timestamp('updated_at'),
@@ -324,7 +330,7 @@ export const apikey = pgTable(
     rateLimitEnabled: boolean('rate_limit_enabled').default(true),
     rateLimitTimeWindow: integer('rate_limit_time_window').default(60000),
     rateLimitMax: integer('rate_limit_max').default(100),
-    requestCount: integer('request_count'),
+    requestCount: integer('request_count').default(0),
     remaining: integer('remaining'),
     lastRequest: timestamp('last_request'),
     expiresAt: timestamp('expires_at'),

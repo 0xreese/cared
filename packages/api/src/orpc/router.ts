@@ -7,6 +7,7 @@ import { chatRouter } from './chat'
 import { creditsRouter } from './credits'
 import { datasetRouter } from './dataset'
 import { expenseRouter } from './expense'
+import { fileRouter } from './file'
 import { messageRouter } from './message'
 import { modelRouter } from './model'
 import { oauthAppRouter } from './oauth-app'
@@ -15,7 +16,7 @@ import { providerKeyRouter } from './provider-key'
 import { storageRouter } from './storage'
 import { stripeRouter } from './stripe'
 import { telemetryRouter } from './telemetry'
-import { tokenizerRouter } from './tokenizer'
+// import { tokenizerRouter } from './tokenizer'
 import { userRouter } from './user'
 import { workspaceRouter } from './workspace'
 
@@ -32,7 +33,7 @@ export const appRouter = {
   dataset: datasetRouter,
   storage: storageRouter,
   model: modelRouter,
-  tokenizer: tokenizerRouter,
+  // tokenizer: tokenizerRouter,
   chat: chatRouter,
   message: messageRouter,
   artifact: artifactRouter,
@@ -40,6 +41,7 @@ export const appRouter = {
   expense: expenseRouter,
   stripe: stripeRouter,
   telemetry: telemetryRouter,
+  file: fileRouter,
 }
 
 export type AppRouter = typeof appRouter

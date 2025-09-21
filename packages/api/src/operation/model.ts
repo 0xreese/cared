@@ -3,7 +3,7 @@ import { z } from 'zod/v4'
 import type { SQL } from '@cared/db'
 import type { BaseProviderInfo, ModelFullId, ModelInfos, ModelType } from '@cared/providers'
 import { eq, inArray, or, sql } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { ProviderModels } from '@cared/db/schema'
 import log from '@cared/log'
 import {
@@ -35,7 +35,7 @@ export async function getProviderModelInfos(
   const baseProviderInfos = getBaseProviderInfos()
 
   // Get provider models from database (system + user/organization)
-  const providerModelsList = await db
+  const providerModelsList = await getDb()
     .select()
     .from(ProviderModels)
     .where(
@@ -115,14 +115,14 @@ export async function getProviderModelInfos(
 
   if (updateIds.length) {
     const finalSql: SQL = sql.join(updateSqlChunks, sql.raw(' '))
-    await db
+    await getDb()
       .update(ProviderModels)
       .set({ models: finalSql })
       .where(inArray(ProviderModels.id, updateIds))
   }
 
   if (deleteIds.length) {
-    await db.delete(ProviderModels).where(inArray(ProviderModels.id, deleteIds))
+    await getDb().delete(ProviderModels).where(inArray(ProviderModels.id, deleteIds))
   }
 
   return providers

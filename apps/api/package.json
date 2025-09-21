@@ -1,0 +1,20 @@
+{
+  "name": "api",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm with-env wrangler dev --port 3001 --env-file ../../.env",
+    "deploy": "pnpm with-env wrangler deploy --minify --env-file ../../.env",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@cared/api": "workspace:*",
+    "@cared/auth": "workspace:*",
+    "hono": "^4.9.8"
+  },
+  "devDependencies": {
+    "@cared/eslint-config": "workspace:*",
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "wrangler": "^4.38.0"
+  }
+}

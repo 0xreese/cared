@@ -1,14 +1,15 @@
-import type { NextRequest } from 'next/server'
-import { notFound } from 'next/navigation'
+import type { Context } from 'hono'
 
 import * as processDocument from './processDocument'
 
-export const POST = async (req: NextRequest, props: { params: { tasks: string[] } }) => {
-  switch (props.params.tasks[0]) {
+export const POST = async (c: Context): Promise<Response> => {
+  const taskName = c.req.param('task')
+
+  switch (taskName) {
     case processDocument.name:
-      return processDocument.POST(req)
+      return processDocument.POST(c)
     default:
-      notFound()
+      return c.json({ message: 'Invalid task name' }, 400)
   }
 }
 

@@ -1,8 +1,7 @@
-import { headers } from 'next/headers'
 import { ORPCError } from '@orpc/server'
 import { z } from 'zod/v4'
 
-import { auth, generateRandomString } from '@cared/auth'
+import { auth, generateRandomString, headers } from '@cared/auth'
 import { desc, eq } from '@cared/db'
 import { App, OAuthAccessToken, OAuthApplication, OAuthConsent } from '@cared/db/schema'
 
@@ -281,7 +280,7 @@ export const oauthAppRouter = {
       // TODO: check if the app already has an OAuth application
 
       const _oauthApp = await auth.api.registerOAuthApplication({
-        headers: await headers(),
+        headers: headers(context.headers),
         body: {
           redirect_uris: input.redirectUris?.map((u) => u.trim()) ?? [],
           scope: 'profile email',

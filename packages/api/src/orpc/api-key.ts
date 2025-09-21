@@ -1,7 +1,7 @@
 import { ORPCError } from '@orpc/server'
 import { z } from 'zod/v4'
 
-import { auth } from '@cared/auth'
+import { auth, headers } from '@cared/auth'
 import { eq } from '@cared/db'
 import { App, Workspace } from '@cared/db/schema'
 
@@ -29,13 +29,13 @@ async function checkCreationPermission(ctx: UserContext, metadata: ApiKeyMetadat
   switch (metadata.scope) {
     case 'organization':
       organizationScope = OrganizationScope.fromOrganization(
-        { db: ctx.db },
+        { headers: ctx.headers, db: ctx.db },
         metadata.organizationId,
       )
       break
     case 'workspace': {
       organizationScope = await OrganizationScope.fromWorkspace(
-        { db: ctx.db },
+        { headers: ctx.headers, db: ctx.db },
         metadata.workspaceId,
         metadata.organizationId,
       )
@@ -43,7 +43,7 @@ async function checkCreationPermission(ctx: UserContext, metadata: ApiKeyMetadat
     }
     case 'app': {
       organizationScope = await OrganizationScope.fromApp(
-        { db: ctx.db },
+        { headers: ctx.headers, db: ctx.db },
         metadata.appId,
         metadata.workspaceId,
         metadata.organizationId,
@@ -84,8 +84,8 @@ export const apiKeyRouter = {
       summary: 'List all API keys for a scope',
     })
     .input(optionalApiKeyMetadataSchema)
-    .handler(async ({ input }) => {
-      const apiKeys = await listApiKeys(input)
+    .handler(async ({ context, input }) => {
+      const apiKeys = await listApiKeys(context, input)
 
       return {
         keys: apiKeys,
@@ -107,8 +107,8 @@ export const apiKeyRouter = {
       summary: 'Check if an entity has an API key',
     })
     .input(optionalApiKeyMetadataSchema)
-    .handler(async ({ input }) => {
-      const apiKeys = await listApiKeys(input)
+    .handler(async ({ context, input }) => {
+      const apiKeys = await listApiKeys(context, input)
 
       return { exists: apiKeys.length > 0 }
     }),
@@ -132,8 +132,9 @@ export const apiKeyRouter = {
         id: z.string(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const apiKey = await auth.api.getApiKey({
+        headers: headers(context.headers),
         query: {
           id: input.id,
         },
@@ -204,7 +205,9 @@ export const apiKeyRouter = {
         }
       }
 
-      const allApiKeys = await auth.api.listApiKeys()
+      const allApiKeys = await auth.api.listApiKeys({
+        headers: headers(context.headers),
+      })
 
       await checkCreationPermission(context, metadata)
 
@@ -255,6 +258,7 @@ export const apiKeyRouter = {
       }
 
       const apiKey = await auth.api.createApiKey({
+        headers: headers(context.headers),
         body: {
           name,
           prefix: apiKeyPrefix(metadata.scope),
@@ -289,8 +293,9 @@ export const apiKeyRouter = {
         id: z.string(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const existingApiKey = await auth.api.getApiKey({
+        headers: headers(context.headers),
         query: {
           id: input.id,
         },
@@ -298,6 +303,7 @@ export const apiKeyRouter = {
 
       // Delete existing key
       await auth.api.deleteApiKey({
+        headers: headers(context.headers),
         body: {
           keyId: existingApiKey.id,
         },
@@ -305,6 +311,7 @@ export const apiKeyRouter = {
 
       // Create new API key with same metadata
       const apiKey = await auth.api.createApiKey({
+        headers: headers(context.headers),
         body: {
           name: existingApiKey.name!,
           prefix: apiKeyPrefix(existingApiKey.metadata?.scope),
@@ -337,8 +344,9 @@ export const apiKeyRouter = {
         key: z.string(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const result = await auth.api.verifyApiKey({
+        headers: headers(context.headers),
         body: {
           key: input.key,
         },
@@ -368,14 +376,16 @@ export const apiKeyRouter = {
         id: z.string(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       const apiKey = await auth.api.getApiKey({
+        headers: headers(context.headers),
         query: {
           id: input.id,
         },
       })
 
       await auth.api.deleteApiKey({
+        headers: headers(context.headers),
         body: {
           keyId: apiKey.id,
         },

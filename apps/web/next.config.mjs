@@ -1,5 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
+import withBundleAnalyzer from '@next/bundle-analyzer'
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import { createJiti } from 'jiti'
 
@@ -11,6 +12,8 @@ await jiti.import('./src/env')
 // @ts-ignore
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+initOpenNextCloudflareForDev()
 
 /** @type {import('next').NextConfig} */
 const config = {
@@ -45,14 +48,16 @@ const config = {
     },
   },
 
-  outputFileTracingIncludes: {
-    '/api/rpc/\\[\\[...all\\]\\]': ['../../packages/tokenizer/assets/tokenizers/*'],
-  },
-  outputFileTracingRoot: path.join(__dirname, '../../'),
+  // outputFileTracingIncludes: {
+  //   '/api/rpc/\\[\\[...all\\]\\]': ['../../packages/tokenizer/assets/tokenizers/*'],
+  // },
+  // outputFileTracingRoot: path.join(__dirname, '../../'),
 
-  serverExternalPackages: ['@agnai/web-tokenizers'],
+  // serverExternalPackages: ['@agnai/web-tokenizers'],
 }
 
-export default config
+const configWithBundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})(config)
 
-initOpenNextCloudflareForDev()
+export default configWithBundleAnalyzer

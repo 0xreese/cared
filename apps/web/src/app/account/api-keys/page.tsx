@@ -3,7 +3,9 @@ import { Suspense } from 'react'
 import { ApiKeys } from '@/components/api-keys'
 import { SectionTitle } from '@/components/section'
 import { SkeletonCard } from '@/components/skeleton'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
+
+export const dynamic = 'force-dynamic'
 
 export default function UserApiKeyPage() {
   prefetch(orpc.apiKey.list.queryOptions())

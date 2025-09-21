@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation'
 
+import { orpcClient } from '@/lib/orpc'
 import { stripIdPrefix } from '@/lib/utils'
-import { orpcClient } from '@/orpc/client'
 import Landing from './landing/page'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const session = await orpcClient.user.session({

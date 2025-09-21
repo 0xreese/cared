@@ -27,8 +27,8 @@ import type { Context } from '../orpc'
 import { OrganizationScope } from '../auth'
 import { s3Client } from '../client/s3'
 import { env } from '../env'
-import { taskTrigger } from '../rest/tasks'
 import { protectedProcedure } from '../orpc'
+import { taskTrigger } from '../rest/tasks'
 
 /**
  * Get a dataset by ID.
@@ -380,10 +380,10 @@ export const datasetRouter = {
    */
   updateDocument: protectedProcedure
     .route({
-        method: 'PATCH',
-        path: '/v1/documents/{id}',
-        tags: ['datasets'],
-        summary: 'Update an existing document',
+      method: 'PATCH',
+      path: '/v1/documents/{id}',
+      tags: ['datasets'],
+      summary: 'Update an existing document',
     })
     .input(UpdateDocumentSchema)
     .handler(async ({ context, input }) => {
@@ -423,12 +423,12 @@ export const datasetRouter = {
    */
   deleteDocument: protectedProcedure
     .route({
-        method: 'DELETE',
-        path: '/v1/documents/{id}',
-        tags: ['datasets'],
-        summary: 'Delete a document and all its segments and chunks',
-        description:
-          'Deletes a document and all its related segments and chunks. Also deletes the associated S3 file if it exists.',
+      method: 'DELETE',
+      path: '/v1/documents/{id}',
+      tags: ['datasets'],
+      summary: 'Delete a document and all its segments and chunks',
+      description:
+        'Deletes a document and all its related segments and chunks. Also deletes the associated S3 file if it exists.',
     })
     .input(z.string())
     .handler(async ({ context, input }) => {
@@ -601,10 +601,10 @@ export const datasetRouter = {
    */
   getDocument: protectedProcedure
     .route({
-        method: 'GET',
-        path: '/v1/documents/{id}',
-        tags: ['datasets'],
-        summary: 'Get a single document by ID',
+      method: 'GET',
+      path: '/v1/documents/{id}',
+      tags: ['datasets'],
+      summary: 'Get a single document by ID',
     })
     .input(z.string())
     .handler(async ({ context, input }) => {
@@ -630,10 +630,10 @@ export const datasetRouter = {
    */
   createSegment: protectedProcedure
     .route({
-        method: 'POST',
-        path: '/v1/segments',
-        tags: ['datasets'],
-        summary: 'Create a new document segment',
+      method: 'POST',
+      path: '/v1/segments',
+      tags: ['datasets'],
+      summary: 'Create a new document segment',
     })
     .input(CreateDocumentSegmentSchema)
     .handler(async ({ context, input }) => {
@@ -675,10 +675,10 @@ export const datasetRouter = {
    */
   updateSegment: protectedProcedure
     .route({
-        method: 'PATCH',
-        path: '/v1/segments/{id}',
-        tags: ['datasets'],
-        summary: 'Update an existing document segment',
+      method: 'PATCH',
+      path: '/v1/segments/{id}',
+      tags: ['datasets'],
+      summary: 'Update an existing document segment',
     })
     .input(UpdateDocumentSegmentSchema)
     .handler(async ({ context, input }) => {
@@ -718,10 +718,10 @@ export const datasetRouter = {
    */
   deleteSegment: protectedProcedure
     .route({
-        method: 'DELETE',
-        path: '/v1/segments/{id}',
-        tags: ['datasets'],
-        summary: 'Delete a document segment and all its chunks',
+      method: 'DELETE',
+      path: '/v1/segments/{id}',
+      tags: ['datasets'],
+      summary: 'Delete a document segment and all its chunks',
     })
     .input(z.string())
     .handler(async ({ context, input }) => {
@@ -755,10 +755,10 @@ export const datasetRouter = {
    */
   listSegments: protectedProcedure
     .route({
-        method: 'GET',
-        path: '/v1/segments',
-        tags: ['datasets'],
-        summary: 'List all segments in a document',
+      method: 'GET',
+      path: '/v1/segments',
+      tags: ['datasets'],
+      summary: 'List all segments in a document',
     })
     .input(
       z
@@ -829,10 +829,10 @@ export const datasetRouter = {
    */
   createChunk: protectedProcedure
     .route({
-        method: 'POST',
-        path: '/v1/chunks',
-        tags: ['datasets'],
-        summary: 'Create a new document chunk',
+      method: 'POST',
+      path: '/v1/chunks',
+      tags: ['datasets'],
+      summary: 'Create a new document chunk',
     })
     .input(CreateDocumentChunkSchema)
     .handler(async ({ context, input }) => {
@@ -878,10 +878,10 @@ export const datasetRouter = {
    */
   updateChunk: protectedProcedure
     .route({
-        method: 'PATCH',
-        path: '/v1/chunks/{id}',
-        tags: ['datasets'],
-        summary: 'Update an existing document chunk',
+      method: 'PATCH',
+      path: '/v1/chunks/{id}',
+      tags: ['datasets'],
+      summary: 'Update an existing document chunk',
     })
     .input(UpdateDocumentChunkSchema)
     .handler(async ({ context, input }) => {
@@ -925,10 +925,10 @@ export const datasetRouter = {
    */
   deleteChunk: protectedProcedure
     .route({
-        method: 'DELETE',
-        path: '/v1/chunks/{id}',
-        tags: ['datasets'],
-        summary: 'Delete a document chunk',
+      method: 'DELETE',
+      path: '/v1/chunks/{id}',
+      tags: ['datasets'],
+      summary: 'Delete a document chunk',
     })
     .input(z.string())
     .handler(async ({ context, input }) => {
@@ -956,10 +956,10 @@ export const datasetRouter = {
    */
   listChunks: protectedProcedure
     .route({
-        method: 'GET',
-        path: '/v1/chunks',
-        tags: ['datasets'],
-        summary: 'List all chunks in a document segment',
+      method: 'GET',
+      path: '/v1/chunks',
+      tags: ['datasets'],
+      summary: 'List all chunks in a document segment',
     })
     .input(
       z

@@ -1,9 +1,9 @@
-import type { Wallet } from '@/hooks/use-wallets'
 import { AlertCircleIcon } from 'lucide-react'
 
 import { Alert, AlertDescription, AlertTitle } from '@cared/ui/components/alert'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@cared/ui/components/dialog'
 
+import type { Wallet } from '@/hooks/use-wallets'
 import { QrCode } from '@/components/qr-code'
 import { WalletAddress } from '@/components/wallet-address'
 

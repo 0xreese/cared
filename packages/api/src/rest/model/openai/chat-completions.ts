@@ -1,7 +1,6 @@
 import assert from 'assert'
-import type { NextRequest } from 'next/server'
+import type { Context } from 'hono'
 import type { OpenAI } from 'openai'
-import { after } from 'next/server'
 import { APICallError } from '@ai-sdk/provider'
 import { z } from 'zod/v4'
 
@@ -32,6 +31,7 @@ import {
   selectTelemetryAttributes,
   stringifyForTelemetry,
 } from '../../../telemetry'
+import { waitUntil } from '../../../utils'
 import { authId, handleError, jsonSchema7Schema } from '../ai/language'
 import {
   ChatCompletionContentPartTextSchema,
@@ -170,16 +170,16 @@ const ChatCompletionRequestArgsSchema = z.object({
   payerOrganizationId: z.string().optional(),
 })
 
-export async function POST(req: NextRequest): Promise<Response> {
+export async function POST(c: Context): Promise<Response> {
   try {
-    const validatedArgs = ChatCompletionRequestArgsSchema.safeParse(await req.json())
+    const validatedArgs = ChatCompletionRequestArgsSchema.safeParse(await c.req.json())
     if (!validatedArgs.success) {
       return new Response(z.prettifyError(validatedArgs.error), { status: 400 })
     }
 
     const { model: modelId, stream: isStream, payerOrganizationId, ...args } = validatedArgs.data
 
-    const auth = await authenticate()
+    const auth = await authenticate(c.req.raw.headers)
     if (!auth.isAuthenticated()) {
       return new Response('Unauthorized', { status: 401 })
     }
@@ -192,6 +192,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const expenseManager = ExpenseManager.from({
       auth: auth.auth!,
       payerOrganizationId,
+      waitUntil: waitUntil(c),
     })
 
     // Allow modelId without provider prefix
@@ -262,6 +263,7 @@ export async function POST(req: NextRequest): Promise<Response> {
               auth: auth.auth!,
               modelId,
               onlyByok: !modelInfo.chargeable,
+              waitUntil: waitUntil(c),
             })
           },
         })
@@ -274,7 +276,7 @@ export async function POST(req: NextRequest): Promise<Response> {
           const callOptions = buildCallOptions({
             args,
             providerId,
-            signal: req.signal,
+            signal: c.req.raw.signal,
           })
 
           await recordSpan({
@@ -479,7 +481,7 @@ export async function POST(req: NextRequest): Promise<Response> {
           await closeStream()
         })
         .finally(() => {
-          after(langfuseSpanProcessor.forceFlush())
+          c.executionCtx.waitUntil(langfuseSpanProcessor.forceFlush())
         })
 
       // Return the streaming response
@@ -492,7 +494,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       })
     }
   } finally {
-    after(langfuseSpanProcessor.forceFlush())
+    c.executionCtx.waitUntil(langfuseSpanProcessor.forceFlush())
   }
 }
 

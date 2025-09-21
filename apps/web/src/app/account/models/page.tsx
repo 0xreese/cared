@@ -1,5 +1,7 @@
 import { Models } from '@/components/models'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
+
+export const dynamic = 'force-dynamic'
 
 /**
  * Models page component

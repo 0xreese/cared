@@ -20,7 +20,7 @@
     "ui-add": "pnpm dlx shadcn@latest add && prettier src --write --list-different"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-aspect-ratio": "^1.1.2",
@@ -65,7 +65,7 @@
     "pretty-bytes": "^6.1.1",
     "react": "catalog:react19",
     "react-day-picker": "9.5.1",
-    "react-hook-form": "^7.54.2",
+    "react-hook-form": "^7.63.0",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.8",
     "recharts": "^2.15.1",

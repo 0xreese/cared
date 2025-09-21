@@ -4,8 +4,8 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
 
 import { lastWorkspaceCookieName } from '@/lib/cookie'
+import { orpc } from '@/lib/orpc'
 import { stripIdPrefix } from '@/lib/utils'
-import { orpc } from '@/orpc/client'
 
 export function useLastWorkspace() {
   const lastWorkspace = Cookies.get(lastWorkspaceCookieName)
@@ -27,8 +27,6 @@ export function useLastWorkspace() {
 export type Workspace = ReturnType<typeof useWorkspaces>[number]
 
 export function useAllWorkspaces() {
-  
-
   const {
     data: { workspaces },
   } = useSuspenseQuery(orpc.workspace.list.queryOptions())

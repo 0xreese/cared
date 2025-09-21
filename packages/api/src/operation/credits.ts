@@ -5,7 +5,7 @@ import { Decimal } from 'decimal.js'
 
 import type { CreditsMetadata, OrderKind, OrderStatus } from '@cared/db/schema'
 import { and, eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Credits, CreditsOrder } from '@cared/db/schema'
 import log from '@cared/log'
 
@@ -30,7 +30,7 @@ export async function cancelCreditsOrder(
 ): Promise<boolean> {
   const stripe = getStripe()
 
-  return await db.transaction(async (tx) => {
+  return await getDb().transaction(async (tx) => {
     // Find the order with select for update
     const order = (
       await tx
@@ -156,7 +156,7 @@ export async function cancelCreditsOrdersByKind(
   throwOnInconsistency = false,
 ): Promise<boolean | undefined> {
   // First, find the credits record
-  const credits = await db.query.Credits.findFirst({
+  const credits = await getDb().query.Credits.findFirst({
     where: organizationId
       ? eq(Credits.organizationId, organizationId)
       : eq(Credits.userId, userId!),
@@ -190,7 +190,7 @@ export async function cancelCreditsOrdersByKind(
   }
 
   // Find the specific order using the objectId from metadata
-  const order = await db.query.CreditsOrder.findFirst({
+  const order = await getDb().query.CreditsOrder.findFirst({
     where: and(
       eq(CreditsOrder.objectId, relevantId),
       eq(CreditsOrder.kind, orderKind),
@@ -207,7 +207,7 @@ export async function cancelCreditsOrdersByKind(
       })
     }
 
-    await db.transaction(async (tx) => {
+    await getDb().transaction(async (tx) => {
       // Get credits with select for update
       const lockedCredits = (
         await tx
@@ -472,7 +472,7 @@ export async function triggerAutoRechargePaymentIntent(
   let paymentIntent: Stripe.PaymentIntent | undefined
 
   try {
-    await db.transaction(async (tx) => {
+    await getDb().transaction(async (tx) => {
       // Get credits with select for update
       const lockedCredits = (
         await tx.select().from(Credits).where(eq(Credits.id, credits.id)).for('update')

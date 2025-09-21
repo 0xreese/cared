@@ -9,7 +9,7 @@ import {
 import { atom, useAtom } from 'jotai'
 import { toast } from 'sonner'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 const PAGE_SIZE = 100
 

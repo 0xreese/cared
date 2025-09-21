@@ -39,18 +39,19 @@ import {
 } from '@cared/ui/components/form'
 import { Input } from '@cared/ui/components/input'
 import { Label } from '@cared/ui/components/label'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 import { Switch } from '@cared/ui/components/switch'
 
-import { CircleSpinner } from '@cared/ui/components/spinner'
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function OAuthApp({ appId }: { appId: string }) {
-  
   const {
     data: { oauthApps },
   } = useSuspenseQuery({
     ...orpc.oauthApp.list.queryOptions({
-      appId,
+      input: {
+        appId,
+      },
     }),
   })
   const oauthApp = oauthApps.at(0)?.oauthApp
@@ -136,7 +137,6 @@ function CreateOAuthApp({
   setShowSecretDialog: (show: boolean) => void
   setSecretToShow: (secret: string) => void
 }) {
-  
   const queryClient = useQueryClient()
 
   // Form setup
@@ -160,7 +160,7 @@ function CreateOAuthApp({
         setShowSecretDialog(true)
         setSecretToShow(data.oauthApp.clientSecret!)
         void queryClient.invalidateQueries({
-          queryKey: orpc.oauthApp.list.queryKey({ appId }),
+          queryKey: orpc.oauthApp.list.queryKey({ input: { appId } }),
         })
       },
       onError: (error) => {
@@ -302,7 +302,6 @@ function UpdateOAuthApp({
   secretToShow?: string
   setSecretToShow: (secret: string) => void
 }) {
-  
   const queryClient = useQueryClient()
   const [showRotateDialog, setShowRotateDialog] = useState(false)
   const [redirectUris, setRedirectUris] = useState<string[]>(oauthApp.redirectUris)
@@ -315,7 +314,7 @@ function UpdateOAuthApp({
     ...orpc.oauthApp.update.mutationOptions({
       onSuccess: () => {
         void queryClient.invalidateQueries({
-          queryKey: orpc.oauthApp.list.queryKey({ appId }),
+          queryKey: orpc.oauthApp.list.queryKey({ input: { appId } }),
         })
         setNewRedirectUri('')
       },
@@ -329,7 +328,7 @@ function UpdateOAuthApp({
     ...orpc.oauthApp.rotateSecret.mutationOptions({
       onSuccess: (data) => {
         void queryClient.invalidateQueries({
-          queryKey: orpc.oauthApp.list.queryKey({ appId }),
+          queryKey: orpc.oauthApp.list.queryKey({ input: { appId } }),
         })
         setSecretToShow(data.oauthApp.clientSecret!)
         setShowSecretDialog(true)

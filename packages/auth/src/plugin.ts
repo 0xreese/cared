@@ -64,9 +64,9 @@ export const customPlugin = () => {
           }
 
           try {
-            const currentList = await ctx.context.secondaryStorage.get(
+            const currentList = (await ctx.context.secondaryStorage.get(
               `active-sessions-${ctx.context.session.user.id}`,
-            )
+            )) as string | null
             if (!currentList) return []
 
             const list: { token: string; expiresAt: number }[] = safeJSONParse(currentList) || []
@@ -77,7 +77,9 @@ export const customPlugin = () => {
 
             await Promise.all(
               validSessions.map(async (session) => {
-                const sessionStringified = await ctx.context.secondaryStorage!.get(session.token)
+                const sessionStringified = (await ctx.context.secondaryStorage!.get(
+                  session.token,
+                )) as string | null
                 if (sessionStringified) {
                   const s = JSON.parse(sessionStringified)
                   const parsedSession = parseSessionOutput(ctx.context.options, {

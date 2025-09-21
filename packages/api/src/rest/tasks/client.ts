@@ -19,7 +19,7 @@ class WorkflowClient extends Client {
       return await super.trigger({
         ...options,
         url: new URL(
-          path.posix.join(tasksApiRoutePath ?? '', options.url),
+          path.posix.join(tasksApiRoutePath, options.url),
           env.UPSTASH_WORKFLOW_URL,
         ).toString(),
       })
@@ -28,7 +28,7 @@ class WorkflowClient extends Client {
         options.map((config) => ({
           ...config,
           url: new URL(
-            path.posix.join(tasksApiRoutePath ?? '', config.url),
+            path.posix.join(tasksApiRoutePath, config.url),
             env.UPSTASH_WORKFLOW_URL,
           ).toString(),
         })),
@@ -41,7 +41,7 @@ export function getWorkflowClient() {
   return new WorkflowClient({})
 }
 
-let tasksApiRoutePath: string | undefined
+let tasksApiRoutePath = '/api/v1/webhooks/tasks'
 
 export function setRoutePath(path: string) {
   tasksApiRoutePath = path

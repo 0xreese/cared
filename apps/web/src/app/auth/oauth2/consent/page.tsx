@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from '@cared/ui/components/card'
 
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export default function Page() {
   const searchParams = useSearchParams()
@@ -34,10 +34,11 @@ export default function Page() {
     return scopes.indexOf(scope) === index
   })
 
-  
   const { data: app } = useQuery(
     orpc.oauthApp.info.queryOptions({
-      clientId: clientId!,
+      input: {
+        clientId: clientId!,
+      },
     }),
   )
 

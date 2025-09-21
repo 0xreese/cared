@@ -1,14 +1,14 @@
 import type { InferSelectModel } from 'drizzle-orm'
 import {
-  boolean,
-  timestamp,
   bigint,
+  boolean,
   index,
   jsonb,
   pgEnum,
   pgTable,
   primaryKey,
   text,
+  timestamp,
   varchar,
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createUpdateSchema } from 'drizzle-zod'

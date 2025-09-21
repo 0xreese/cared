@@ -8,9 +8,11 @@ import { AppTopBar } from '@/components/app-topbar'
 import { ErrorFallback } from '@/components/error-fallback'
 import { ForgetOrganization } from '@/components/remember-organization'
 import { Section } from '@/components/section'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { prefetchAndCheckSession } from '@/lib/session'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
 import { AccountNavMain } from './nav-main'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Layout({
   children,

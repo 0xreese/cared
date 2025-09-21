@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation'
 
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { prefetchAndCheckSession } from '@/lib/session'
 import { AcceptInvitation } from './accept-invitation'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page({ params }: { params: Promise<{ invitationId: string }> }) {
   const { invitationId } = await params
@@ -23,7 +25,9 @@ export default async function Page({ params }: { params: Promise<{ invitationId:
 
   prefetch(
     orpc.organization.getInvitation.queryOptions({
-      invitationId,
+      input: {
+        invitationId,
+      }
     }),
   )
 

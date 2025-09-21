@@ -1,6 +1,7 @@
-
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { Security } from './security'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default function Page() {
   prefetch(orpc.user.sessions.queryOptions())

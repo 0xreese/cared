@@ -27,10 +27,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@cared/ui/components/sheet'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 import { Switch } from '@cared/ui/components/switch'
 
 import { OptionalInput } from '@/components/input'
-import { CircleSpinner } from '@cared/ui/components/spinner'
 import { useProviders } from '@/hooks/use-model'
 import {
   useCreateProviderKey,

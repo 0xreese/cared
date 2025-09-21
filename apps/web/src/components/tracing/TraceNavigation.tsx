@@ -5,11 +5,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 
 import { Button } from '@cared/ui/components/button'
 import { InputCommandShortcut } from '@cared/ui/components/input-command'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@cared/ui/components/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@cared/ui/components/tooltip'
 
 import type { TraceWithDetails } from '@langfuse/core'
 
@@ -31,8 +27,7 @@ export function TraceNavigation({ traces, currentTraceId, onNavigate }: TraceNav
       if (
         event.target instanceof HTMLInputElement ||
         event.target instanceof HTMLTextAreaElement ||
-        (event.target instanceof HTMLElement &&
-          event.target.getAttribute('role') === 'textbox')
+        (event.target instanceof HTMLElement && event.target.getAttribute('role') === 'textbox')
       ) {
         return
       }

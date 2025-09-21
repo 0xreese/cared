@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@cared/ui/components/dialog'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 import {
   Table,
   TableBody,
@@ -24,11 +25,9 @@ import {
   TableRow,
 } from '@cared/ui/components/table'
 
-import { CircleSpinner } from '@cared/ui/components/spinner'
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function Tags() {
-  
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [isSelectAll, setIsSelectAll] = useState(false)
@@ -38,8 +37,10 @@ export function Tags() {
   // Fetch tags using paginated query
   const { data, isPending, refetch } = useQuery({
     ...orpc.app.listTags.queryOptions({
-      limit: PAGE_SIZE,
-      ...cursor,
+      input: {
+        limit: PAGE_SIZE,
+        ...cursor,
+      },
     }),
     placeholderData: keepPreviousData,
   })

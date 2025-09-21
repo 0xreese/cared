@@ -1,5 +1,6 @@
-import type { JSONValue } from '@ai-sdk/provider'
 import { z } from 'zod/v4'
+
+import type { JSONValue } from '@ai-sdk/provider'
 
 export type { JSONValue } from '@ai-sdk/provider'
 

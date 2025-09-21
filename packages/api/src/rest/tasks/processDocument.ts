@@ -1,10 +1,10 @@
-import { serve } from '@upstash/workflow/nextjs'
+import { serve } from '@upstash/workflow/hono'
 import { generateObject } from 'ai'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod/v4'
 
 import type { CreateDocumentChunkSchema } from '@cared/db/schema'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { Dataset, Document, DocumentChunk, DocumentSegment } from '@cared/db/schema'
 import { loadFile } from '@cared/etl'
 import { log } from '@cared/log'
@@ -61,11 +61,11 @@ export function isDocumentNeedsProcessing(document: Document) {
   return document.metadata.url && !document.metadata.processed && !document.metadata.taskId
 }
 
-export const { POST } = serve<string>(
+export const POST = serve<string>(
   async (context) => {
     const docId = context.requestPayload
 
-    const doc = await db.query.Document.findFirst({
+    const doc = await getDb().query.Document.findFirst({
       where: eq(Document.id, docId),
     })
 
@@ -84,7 +84,7 @@ export const { POST } = serve<string>(
       return
     }
 
-    const dataset = await db.query.Dataset.findFirst({
+    const dataset = await getDb().query.Dataset.findFirst({
       where: eq(Dataset.id, doc.datasetId),
     })
 
@@ -175,7 +175,7 @@ Clean up the text by:
     ).then((results) => results.flat())
 
     await context.run('store-embeddings', async () => {
-      await db.transaction(async (tx) => {
+      await getDb().transaction(async (tx) => {
         const vdb = new QdrantVector(dimensions)
 
         // Prepare batch arrays for segments and chunks
@@ -252,7 +252,7 @@ Clean up the text by:
   },
 )
 
-export const name = 'processDocument'
+export const name = 'process-document'
 
 export async function trigger(document: Document) {
   if (!isDocumentNeedsProcessing(document)) {
@@ -264,7 +264,7 @@ export async function trigger(document: Document) {
     body: document.id,
   })
 
-  await db
+  await getDb()
     .update(Document)
     .set({
       metadata: {

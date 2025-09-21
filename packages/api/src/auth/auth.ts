@@ -1,11 +1,10 @@
 import { cache } from 'react'
-import { headers } from 'next/headers'
 import { base64Url } from '@better-auth/utils/base64'
 import { createHash } from '@better-auth/utils/hash'
 
-import { auth as authApi } from '@cared/auth'
+import { auth as authApi, headers as authHeaders } from '@cared/auth'
 import { eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { ApiKey, App, OAuthAccessToken, OAuthApplication, User } from '@cared/db/schema'
 
 import type { ApiKeyAuth, ApiKeyMetadata } from '../types'
@@ -146,11 +145,7 @@ export class Auth {
   }
 }
 
-export async function authenticate() {
-  return authenticateWithHeaders(await headers())
-}
-
-export const authenticateWithHeaders = cache(async (headers: Headers): Promise<Auth> => {
+export const authenticate = cache(async (headers: Headers): Promise<Auth> => {
   const authorization = headers.get('Authorization')
   const bearerToken = authorization?.replace('Bearer ', '') ?? ''
 
@@ -167,7 +162,7 @@ export const authenticateWithHeaders = cache(async (headers: Headers): Promise<A
     })
 
     // TODO: cache
-    const key = await db.query.ApiKey.findFirst({
+    const key = await getDb().query.ApiKey.findFirst({
       where: eq(ApiKey.key, hashed),
     })
 
@@ -182,7 +177,7 @@ export const authenticateWithHeaders = cache(async (headers: Headers): Promise<A
       if (auth.scope === 'user') {
         auth.userId = key.userId
 
-        const user = await db.query.User.findFirst({
+        const user = await getDb().query.User.findFirst({
           where: eq(User.id, key.userId),
         })
         if (!user) {
@@ -202,12 +197,12 @@ export const authenticateWithHeaders = cache(async (headers: Headers): Promise<A
 
   if (bearerToken) {
     // TODO: cache
-    const accessToken = await db.query.OAuthAccessToken.findFirst({
+    const accessToken = await getDb().query.OAuthAccessToken.findFirst({
       where: eq(OAuthAccessToken.accessToken, bearerToken),
     })
     if (accessToken) {
       // TODO: cache
-      const oauthApp = await db.query.OAuthApplication.findFirst({
+      const oauthApp = await getDb().query.OAuthApplication.findFirst({
         where: eq(OAuthApplication.clientId, accessToken.clientId!),
       })
       if (oauthApp?.metadata) {
@@ -223,7 +218,7 @@ export const authenticateWithHeaders = cache(async (headers: Headers): Promise<A
 
   const { user, session } =
     (await authApi.api.getSession({
-      headers,
+      headers: authHeaders(headers),
     })) ?? {}
   if (!user || !session) {
     return new Auth()
@@ -232,7 +227,7 @@ export const authenticateWithHeaders = cache(async (headers: Headers): Promise<A
   {
     const appId = headers.get('X-APP-ID')
     if (appId) {
-      const app = await db.query.App.findFirst({
+      const app = await getDb().query.App.findFirst({
         where: eq(App.id, appId),
       })
       if (!app) {

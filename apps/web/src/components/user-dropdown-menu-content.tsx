@@ -1,6 +1,5 @@
 'use client'
 
-import type { User } from '@/hooks/use-session'
 import Link from 'next/link'
 import {
   CircleDollarSignIcon,
@@ -19,6 +18,7 @@ import {
 } from '@cared/ui/components/dropdown-menu'
 import { useIsMobile } from '@cared/ui/hooks/use-mobile'
 
+import type { User } from '@/hooks/use-session'
 import { ThemeSwitcher } from '@/components/theme'
 import { useSignOut } from '@/hooks/use-signout'
 import { UserInfo } from './user-info'

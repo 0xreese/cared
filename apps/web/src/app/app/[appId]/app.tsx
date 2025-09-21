@@ -8,18 +8,18 @@ import type { App as AppType } from '@cared/db/schema'
 
 import { SectionTitle } from '@/components/section'
 import { UploadLogo } from '@/components/upload-logo'
+import { orpc } from '@/lib/orpc'
 import defaultLogo from '@/public/images/agent.png'
-import { orpc } from '@/orpc/client'
 
 export function App({ appId }: { appId: string }) {
-  
-
   // Get app information
   const {
     data: { app },
   } = useSuspenseQuery({
     ...orpc.app.byId.queryOptions({
-      id: appId,
+      input: {
+        id: appId,
+      },
     }),
   })
 
@@ -27,7 +27,6 @@ export function App({ appId }: { appId: string }) {
 }
 
 function UpdateAppLogo({ app }: { app: AppType }) {
-  
   const queryClient = useQueryClient()
 
   // App update mutation
@@ -36,7 +35,9 @@ function UpdateAppLogo({ app }: { app: AppType }) {
       onSuccess: () => {
         void queryClient.invalidateQueries(
           orpc.app.byId.queryOptions({
-            id: app.id,
+            input: {
+              id: app.id,
+            },
           }),
         )
       },

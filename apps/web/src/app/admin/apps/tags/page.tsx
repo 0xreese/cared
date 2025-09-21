@@ -1,11 +1,14 @@
-
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { Tags } from './tags'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default function Page() {
   prefetch(
     orpc.app.listTags.queryOptions({
-      limit: 100,
+      input: {
+        limit: 100,
+      }
     }),
   )
 

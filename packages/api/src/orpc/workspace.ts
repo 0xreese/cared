@@ -1,7 +1,7 @@
 import { ORPCError } from '@orpc/server'
-import { count, desc, eq } from '@cared/db'
 import { z } from 'zod/v4'
 
+import { count, desc, eq } from '@cared/db'
 import { Member, Workspace } from '@cared/db/schema'
 
 import { OrganizationScope } from '../auth'
@@ -200,7 +200,7 @@ export const workspaceRouter = {
         })
       }
 
-      const operator = new WorkspaceOperator(workspace.id)
+      const operator = new WorkspaceOperator(context, workspace.id)
 
       await operator.delete()
     }),

@@ -6,15 +6,14 @@ import { toast } from 'sonner'
 
 import { Button } from '@cared/ui/components/button'
 import { Card, CardContent, CardDescription, CardTitle } from '@cared/ui/components/card'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 
 import { RemoteImage } from '@/components/image'
 import { SectionTitle } from '@/components/section'
-import { CircleSpinner } from '@cared/ui/components/spinner'
+import { orpc } from '@/lib/orpc'
 import defaultLogo from '@/public/images/agent.png'
-import { orpc } from '@/orpc/client'
 
 export function Applications() {
-  
   const { data: apps, refetch } = useSuspenseQuery(orpc.user.oauthApps.queryOptions())
 
   const revokeMutation = useMutation(

@@ -1,9 +1,8 @@
-import { headers } from 'next/headers'
 import { ORPCError } from '@orpc/server'
 import { z } from 'zod/v4'
 
 import type { SQL } from '@cared/db'
-import { auth } from '@cared/auth'
+import { auth, headers } from '@cared/auth'
 import { and, asc, desc, eq, gt, lt, sql } from '@cared/db'
 import { user as User } from '@cared/db/schema/auth'
 
@@ -127,13 +126,13 @@ export const userRouter = {
       summary: 'Delete a user and their associated data',
     })
     .input(z.string())
-    .handler(async ({ input }) => {
+    .handler(async ({ context, input }) => {
       // Delete user from auth system
       await auth.api.removeUser({
+        headers: headers(context.headers),
         body: {
           userId: input,
         },
-        headers: await headers(),
       })
     }),
 }

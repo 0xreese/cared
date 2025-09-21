@@ -34,7 +34,7 @@ export const cfg = {
          */
         cooldownPeriod: 5 * 60 * 1000, // 5 minutes
       },
-    }
+    },
   },
   /**
    * User-level resource limitations

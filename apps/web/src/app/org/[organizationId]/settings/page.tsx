@@ -1,21 +1,21 @@
 import { getActiveOrganizationId } from '@/lib/active'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { Settings } from './settings'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default function Page({ params }: { params: Promise<{ organizationId: string }> }) {
   return <HydrateSettings params={params} />
 }
 
-export async function HydrateSettings({
-  params,
-}: {
-  params: Promise<{ organizationId: string }>
-}) {
+export async function HydrateSettings({ params }: { params: Promise<{ organizationId: string }> }) {
   const { activeOrganizationId } = await getActiveOrganizationId(params)
 
   prefetch(
     orpc.organization.listMembers.queryOptions({
-      organizationId: activeOrganizationId,
+      input: {
+        organizationId: activeOrganizationId,
+      }
     }),
   )
 

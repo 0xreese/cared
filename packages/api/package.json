@@ -5,9 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./types": "./src/types/index.ts",
-    "./auth": "./src/auth/index.ts",
-    "./rest": "./src/rest/index.ts"
+    "./types": "./src/types/index.ts"
   },
   "license": "MIT",
   "scripts": {
@@ -17,6 +15,7 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "generate-orpc-contract": "pnpm with-env tsx ./scripts/generate-orpc-contract.ts",
     "generate-api-types": "tsx ./scripts/generate-api-types.ts && pnpm prettier --check --write ../sdk/src/api.d.ts",
     "push-provider-models": "pnpm with-env tsx ./scripts/push-provider-models.ts",
     "load-redis-script": "pnpm with-env tsx ./scripts/load-redis-script.ts",
@@ -24,6 +23,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@aws-sdk/s3-request-presigner": "^3.893.0",
     "@cared/auth": "workspace:*",
     "@cared/db": "workspace:*",
     "@cared/email": "workspace:*",
@@ -41,18 +41,17 @@
     "@opentelemetry/exporter-jaeger": "^2.1.0",
     "@opentelemetry/sdk-node": "^0.205.0",
     "@orpc/client": "^1.8.9",
+    "@orpc/contract": "^1.8.9",
     "@orpc/openapi": "^1.8.9",
     "@orpc/server": "^1.8.9",
     "@orpc/zod": "^1.8.9",
     "@upstash/qstash": "^2.8.2",
     "@upstash/workflow": "^0.2.19",
     "mime": "^4.0.6",
-    "next-s3-upload": "^0.3.4",
     "sanitize-filename": "^1.6.3",
     "stripe": "^18.3.0",
     "superjson": "2.2.2",
-    "zod": "catalog:",
-    "zod-form-data": "^2.0.7"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@cared/eslint-config": "workspace:*",

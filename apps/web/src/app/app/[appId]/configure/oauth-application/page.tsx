@@ -1,9 +1,11 @@
 import { Suspense } from 'react'
 
 import { SkeletonCard } from '@/components/skeleton'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { addIdPrefix } from '@/lib/utils'
 import { OAuthApp } from './oauth-app'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page({
   params,
@@ -17,7 +19,9 @@ export default async function Page({
 
   prefetch(
     orpc.oauthApp.list.queryOptions({
-      appId,
+      input: {
+        appId,
+      }
     }),
   )
 

@@ -9,10 +9,12 @@ import { AppTopBar } from '@/components/app-topbar'
 import { ErrorFallback } from '@/components/error-fallback'
 import { RememberWorkspace } from '@/components/remember-workspace'
 import { Section } from '@/components/section'
+import { fetch, HydrateClient, orpc, prefetch } from '@/lib/orpc'
+import { prefetchAndCheckSession } from '@/lib/session'
 import { addIdPrefix } from '@/lib/utils'
 import { WorkspaceNavMain } from './nav-main'
-import { prefetchAndCheckSession } from '@/lib/session'
-import { fetch, HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function WorkspaceLayout({
   children,

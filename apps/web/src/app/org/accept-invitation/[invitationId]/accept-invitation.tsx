@@ -26,8 +26,8 @@ import {
   CardTitle,
 } from '@cared/ui/components/card'
 
+import { orpc } from '@/lib/orpc'
 import { stripIdPrefix } from '@/lib/utils'
-import { orpc } from '@/orpc/client'
 
 interface AcceptInvitationProps {
   invitationId: string
@@ -35,13 +35,15 @@ interface AcceptInvitationProps {
 
 export function AcceptInvitation({ invitationId }: AcceptInvitationProps) {
   const router = useRouter()
-  
+
   const [isProcessing, setIsProcessing] = useState(false)
 
   // Get invitation details with proper error handling
   const { data, isLoading, error, isError } = useQuery(
     orpc.organization.getInvitation.queryOptions({
-      invitationId,
+      input: {
+        invitationId,
+      }
     }),
   )
 

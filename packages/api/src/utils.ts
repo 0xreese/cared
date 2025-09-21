@@ -1,3 +1,5 @@
+import type { Context as HonoContext } from 'hono'
+
 export enum MeasureUnit {
   MINUTES = 'm',
   SECONDS = 's',
@@ -49,4 +51,13 @@ export function omitUserId<
 
 export function stripIdPrefix(id: string) {
   return id.split('_', 2)[1] ?? ''
+}
+
+export type WaitUntil = (fn: Promise<unknown> | (() => Promise<unknown>)) => void
+
+export function waitUntil(ctx: HonoContext): WaitUntil {
+  return (fn: Promise<unknown> | (() => Promise<unknown>)) => {
+    const promise = typeof fn === 'function' ? fn() : fn
+    return ctx.executionCtx.waitUntil(promise)
+  }
 }

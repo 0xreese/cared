@@ -10,11 +10,15 @@ import type { Auth } from './auth'
 
 interface Context {
   auth?: Auth
+  headers: Headers
   db: Database | Transaction
 }
 
 export class OrganizationScope {
-  private constructor(public organizationId: string) {}
+  private constructor(
+    public ctx: Context,
+    public organizationId: string,
+  ) {}
 
   static fromOrganization(ctx: Context, organizationId: string) {
     if (ctx.auth && !ctx.auth.checkOrganization({ organizationId })) {
@@ -22,7 +26,7 @@ export class OrganizationScope {
         message: 'You do not have permission to access this organization',
       })
     }
-    return new OrganizationScope(organizationId)
+    return new OrganizationScope(ctx, organizationId)
   }
 
   static async fromWorkspace(ctx: Context, workspaceId: string, organizationId?: string) {
@@ -44,7 +48,7 @@ export class OrganizationScope {
       })
     }
 
-    return new OrganizationScope(organizationId)
+    return new OrganizationScope(ctx, organizationId)
   }
 
   static async fromApp(
@@ -100,12 +104,12 @@ export class OrganizationScope {
       })
     }
 
-    return new OrganizationScope(organizationId)
+    return new OrganizationScope(ctx, organizationId)
   }
 
   async checkPermissions(permissions: OrganizationStatementsSubset = { pseudo: [] }) {
     const { success } = await auth.api.hasPermission({
-      headers: await headers(),
+      headers: headers(this.ctx.headers),
       body: {
         organizationId: this.organizationId,
         permissions,

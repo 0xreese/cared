@@ -1,14 +1,18 @@
 import { and, eq, ne } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { App, Chat, Workspace } from '@cared/db/schema'
 
+import type { BaseContext } from '../orpc'
 import { deleteApiKeys } from './api-key'
 
 export class WorkspaceOperator {
-  constructor(public workspaceId: string) {}
+  constructor(
+    public ctx: BaseContext,
+    public workspaceId: string,
+  ) {}
 
   async isArchived() {
-    const workspace = await db.query.Workspace.findFirst({
+    const workspace = await getDb().query.Workspace.findFirst({
       where: eq(Workspace.id, this.workspaceId),
       columns: { archived: true },
     })
@@ -16,7 +20,7 @@ export class WorkspaceOperator {
   }
 
   async archive() {
-    await db.transaction(async (tx) => {
+    await getDb().transaction(async (tx) => {
       const archivedAt = new Date()
 
       // Archive all associated apps
@@ -39,7 +43,7 @@ export class WorkspaceOperator {
   }
 
   async unarchive() {
-    await db
+    await getDb()
       .update(Workspace)
       .set({
         archived: null,
@@ -50,7 +54,7 @@ export class WorkspaceOperator {
 
   async isDeletable() {
     const hasChat = !!(
-      await db
+      await getDb()
         .select({
           id: Chat.id,
         })
@@ -63,7 +67,7 @@ export class WorkspaceOperator {
   }
 
   async isDeleted(soft = true) {
-    const workspace = await db.query.App.findFirst({
+    const workspace = await getDb().query.App.findFirst({
       where: eq(App.id, this.workspaceId),
       columns: { deleted: true },
     })
@@ -71,7 +75,7 @@ export class WorkspaceOperator {
   }
 
   async softDelete() {
-    await db
+    await getDb()
       .update(Workspace)
       .set({
         deleted: true,
@@ -92,13 +96,13 @@ export class WorkspaceOperator {
 
     await this.softDelete()
 
-    await deleteApiKeys({
+    await deleteApiKeys(this.ctx, {
       scope: 'workspace',
       workspaceId: this.workspaceId,
     })
 
     // TODO: credits
-    await db.transaction(async (tx) => {
+    await getDb().transaction(async (tx) => {
       await tx.delete(Workspace).where(eq(Workspace.id, this.workspaceId))
     })
   }

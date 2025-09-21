@@ -35,13 +35,9 @@ const SuccessNotification: React.FC<{
       <div className="flex min-w-[300px] flex-1 flex-col gap-2">
         <div className="flex items-center gap-2">
           <BadgeCheck size={20} />
-          <div className="m-0 text-sm font-medium leading-tight">
-            {title}
-          </div>
+          <div className="m-0 text-sm font-medium leading-tight">{title}</div>
         </div>
-        {description && (
-          <div className="text-sm leading-tight">{description}</div>
-        )}
+        {description && <div className="text-sm leading-tight">{description}</div>}
         {link && (
           <ActionButton href={link.href} size="sm" variant="secondary" className="self-start">
             {link.text}

@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from '@cared/ui/components/form'
 import { Input } from '@cared/ui/components/input'
+import { CircleSpinner } from '@cared/ui/components/spinner'
 import {
   Table,
   TableBody,
@@ -36,11 +37,9 @@ import {
   TableRow,
 } from '@cared/ui/components/table'
 
-import { CircleSpinner } from '@cared/ui/components/spinner'
-import { orpc } from '@/orpc/client'
+import { orpc } from '@/lib/orpc'
 
 export function Categories() {
-  
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -49,7 +48,9 @@ export function Categories() {
   // Fetch all categories using suspense
   const { data, refetch } = useSuspenseQuery({
     ...orpc.app.listCategories.queryOptions({
-      limit: 100,
+      input: {
+        limit: 100,
+      },
     }),
   })
 

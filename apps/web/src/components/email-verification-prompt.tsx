@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@cared/ui/components/card'
-
 import { CircleSpinner } from '@cared/ui/components/spinner'
 
 type EmailPromptType = 'verification' | 'password-reset'

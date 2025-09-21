@@ -74,7 +74,7 @@ export function ErrorFallback({ error }: FallbackProps) {
         </div>
 
         <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-          Redirecting to homepage in {countdown} seconds{dots}
+          Redirecting to homepage in {countdown} seconds <span className="inline-block w-4 text-left">{dots}</span>
         </div>
       </div>
     </div>

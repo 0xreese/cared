@@ -6,6 +6,7 @@ import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe
 import { loadStripe } from '@stripe/stripe-js'
 
 import { Spinner } from '@cared/ui/components/spinner'
+
 import { env } from '@/env'
 import {
   useCreateCreditsOnetimeCheckout,

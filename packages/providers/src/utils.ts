@@ -9,26 +9,31 @@ class CustomResponse extends Response {
 
   arrayBuffer = async () => {
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     const [result] = await Promise.all([super.arrayBuffer(), this.wait])
     return result
   }
   blob = async () => {
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     const [result] = await Promise.all([super.blob(), this.wait])
     return result
   }
   formData = async () => {
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     const [result] = await Promise.all([super.formData(), this.wait])
     return result
   }
   json = async () => {
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     const [result] = await Promise.all([super.json(), this.wait])
     return result
   }
   text = async () => {
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     const [result] = await Promise.all([super.text(), this.wait])
     return result
   }

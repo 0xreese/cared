@@ -708,12 +708,12 @@ export function hasChildren(value: unknown, valueType: JsonTableRow['type']): bo
 
 export function getRowChildren(row: JsonTableRow): JsonTableRow[] {
   if (row.subRows && row.subRows.length > 0) {
-    return row.subRows;
+    return row.subRows
   }
   if (row.rawChildData) {
     // Prevent infinite recursion by limiting depth; 25 levels of nesting should make a reasonable assumption
     if (row.level > 25) {
-      return [];
+      return []
     }
     return transformJsonToTableData(
       row.rawChildData,
@@ -721,7 +721,7 @@ export function getRowChildren(row: JsonTableRow): JsonTableRow[] {
       row.level + 1,
       row.id,
       false, // Don't lazy load for child generation
-    );
+    )
   }
-  return [];
+  return []
 }

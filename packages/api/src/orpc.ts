@@ -1,12 +1,11 @@
-import { connection } from 'next/server'
 import { ORPCError, os } from '@orpc/server'
-import type { ResponseHeadersPluginContext } from '@orpc/server/plugins'
 
 import type { Database } from '@cared/db/client'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 
 import type { Auth } from './auth'
-import { authenticateWithHeaders } from './auth'
+import type { ResponseHeadersPluginContext } from '@orpc/server/plugins'
+import { authenticate } from './auth'
 import { env } from './env'
 
 export interface BaseContext extends ResponseHeadersPluginContext {
@@ -18,18 +17,14 @@ export type Context = BaseContext & {
   auth: Auth
 }
 
-export const createORPCContext = async ({
-  headers,
-}: {
-  headers: Headers
-}): Promise<Context> => {
-  const auth = await authenticateWithHeaders(headers)
+export const createORPCContext = async ({ headers }: { headers: Headers }): Promise<Context> => {
+  const auth = await authenticate(headers)
 
   console.log('>>> oRPC Request from', headers.get('x-orpc-source') ?? 'unknown', 'by', auth.by())
 
   return {
     auth,
-    db,
+    db: getDb(),
     headers,
   }
 }
@@ -42,7 +37,6 @@ const timingMiddleware = o.middleware(async ({ next, path }) => {
   // Check if we're in development mode
   const isDev = env.NODE_ENV === 'development'
   if (isDev) {
-    await connection()
     // artificial delay in dev 100-500ms
     const waitMs = Math.floor(Math.random() * 400) + 100
     await new Promise((resolve) => setTimeout(resolve, waitMs))

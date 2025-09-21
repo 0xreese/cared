@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { SignInUp } from '@/components/sign-in-up'
-import { fetch, HydrateClient, orpc } from '@/orpc/client'
+import { fetch, HydrateClient, orpc } from '@/lib/orpc'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Sign up | Cared',
@@ -17,7 +19,9 @@ export default async function Page({
 
   const session = await fetch(
     orpc.user.session.queryOptions({
-      auth: false,
+      input: {
+        auth: false,
+      }
     }),
   )
   if (session) {

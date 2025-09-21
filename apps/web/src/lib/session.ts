@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 
 import type { authClient } from '@cared/auth/client'
 
-import { fetch, orpc, setData } from '@/orpc/client'
+import { fetch, orpc, setData } from '@/lib/orpc'
 
 export type Session = typeof authClient.$Infer.Session
 
@@ -12,7 +12,9 @@ export async function prefetchAndCheckSession(
 ) {
   const session = await fetch(
     orpc.user.session.queryOptions({
-      auth: false,
+      input: {
+        auth: false,
+      }
     }),
   )
   if (!session || (check && !check(session))) {
@@ -22,7 +24,9 @@ export async function prefetchAndCheckSession(
 
   setData(
     orpc.user.session.queryKey({
-      auth: false,
+      input: {
+        auth: false,
+      },
     }),
     session,
   )

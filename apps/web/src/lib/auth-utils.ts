@@ -32,8 +32,10 @@ export function createAuthUrl(path: string, redirectTo: string): string {
  */
 export function useAuthRedirect() {
   const searchParams = useSearchParams()
-  
+
   const redirectTo = getRedirectTo(searchParams)
+  const fullRedirectTo =
+    typeof window !== 'undefined' ? window.location.origin + redirectTo : redirectTo
 
   const createAuthUrlFromClient = (path: string): string => {
     return createAuthUrl(path, redirectTo)
@@ -41,6 +43,7 @@ export function useAuthRedirect() {
 
   return {
     redirectTo,
+    fullRedirectTo,
     createAuthUrl: createAuthUrlFromClient,
   }
 }

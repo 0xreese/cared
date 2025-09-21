@@ -6,9 +6,11 @@ import { SidebarInset, SidebarProvider } from '@cared/ui/components/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { ErrorFallback } from '@/components/error-fallback'
 import { Section } from '@/components/section'
+import { HydrateClient, orpc, prefetch } from '@/lib/orpc'
 import { prefetchAndCheckSession } from '@/lib/session'
 import { AdminNavMain } from './nav-main'
-import { HydrateClient, orpc, prefetch } from '@/orpc/client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Layout({
   children,

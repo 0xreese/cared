@@ -5,7 +5,7 @@ import type { OrganizationStatementsSubset } from '@cared/auth'
 import type { SQL } from '@cared/db'
 import type { ProviderId } from '@cared/providers'
 import { and, desc, eq } from '@cared/db'
-import { db } from '@cared/db/client'
+import { getDb } from '@cared/db/client'
 import { ProviderKey, ProviderSettings } from '@cared/db/schema'
 import { providerIdSchema, providerKeySchema } from '@cared/providers'
 
@@ -47,7 +47,7 @@ export const providerKeyRouter = {
         })
       }
 
-      const         conditions: SQL<unknown>[] = [
+      const conditions: SQL<unknown>[] = [
         isSystem
           ? eq(ProviderKey.isSystem, true)
           : !organizationId
@@ -59,7 +59,7 @@ export const providerKeyRouter = {
         conditions.push(eq(ProviderKey.providerId, providerId))
       }
 
-      const keys = await db.query.ProviderKey.findMany({
+      const keys = await getDb().query.ProviderKey.findMany({
         where: and(...conditions),
         orderBy: desc(ProviderKey.id),
       })
@@ -115,7 +115,7 @@ export const providerKeyRouter = {
       const encryptedKey = await encryptProviderKey(key)
 
       // Create the provider key
-      const [newKey] = await db
+      const [newKey] = await getDb()
         .insert(ProviderKey)
         .values({
           isSystem,
@@ -174,7 +174,7 @@ export const providerKeyRouter = {
       const { id, key, disabled } = input
 
       // Find the existing provider key
-      const existingKey = await db.query.ProviderKey.findFirst({
+      const existingKey = await getDb().query.ProviderKey.findFirst({
         where: eq(ProviderKey.id, id),
       })
       if (!existingKey) {
@@ -206,7 +206,7 @@ export const providerKeyRouter = {
       }
 
       // Update the provider key
-      const [updatedKey] = await db
+      const [updatedKey] = await getDb()
         .update(ProviderKey)
         .set(updates)
         .where(eq(ProviderKey.id, id))
@@ -257,7 +257,7 @@ export const providerKeyRouter = {
       const { id } = input
 
       // Find the existing provider key
-      const existingKey = await db.query.ProviderKey.findFirst({
+      const existingKey = await getDb().query.ProviderKey.findFirst({
         where: eq(ProviderKey.id, id),
       })
       if (!existingKey) {
@@ -291,7 +291,7 @@ export const providerKeyRouter = {
       })
 
       // Delete the provider key
-      await db.delete(ProviderKey).where(eq(ProviderKey.id, id))
+      await getDb().delete(ProviderKey).where(eq(ProviderKey.id, id))
 
       if (existingKey.isSystem) {
         await enableProvider(context, existingKey.providerId)
@@ -333,7 +333,10 @@ async function checkPermissions(
       // App user cannot access organization provider keys
       return false
     }
-    const scope = OrganizationScope.fromOrganization({ db }, organizationId)
+    const scope = OrganizationScope.fromOrganization(
+      { headers: context.headers, db: getDb() },
+      organizationId,
+    )
     await scope.checkPermissions(permissions)
   } else {
     if (userId && userId !== context.auth.userId) {

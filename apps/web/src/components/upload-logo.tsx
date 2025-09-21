@@ -7,7 +7,7 @@ import { PencilIcon, UploadIcon, XIcon } from 'lucide-react'
 import { usePresignedUpload } from 'next-s3-upload'
 import { toast } from 'sonner'
 
-import type { s3Upload } from '@cared/api/rest'
+import type { S3Location } from '@cared/api'
 import { Button } from '@cared/ui/components/button'
 import {
   DropdownMenu,
@@ -15,17 +15,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@cared/ui/components/dropdown-menu'
+import { Spinner } from '@cared/ui/components/spinner'
 import { cn } from '@cared/ui/lib/utils'
 
 import { RemoteImage } from '@/components/image'
-import { Spinner } from '@cared/ui/components/spinner'
 import { env } from '@/env'
 
 export interface UploadLogoProps {
   /**
    * Upload location
    */
-  location: s3Upload.S3LocationRequest
+  location: S3Location
   /**
    * Current logo URL
    */
@@ -64,8 +64,6 @@ export function UploadLogo({
   const [isUploading, setIsUploading] = useState(false)
   const { uploadToS3 } = usePresignedUpload()
 
-  const params = new URLSearchParams(location).toString()
-
   // Handle file upload
   const handleFileUpload = useCallback(
     async (file: File) => {
@@ -88,7 +86,8 @@ export function UploadLogo({
           await uploadToS3(file, {
             endpoint: {
               request: {
-                url: `/api/v1/s3-upload/?${params}`,
+                url: '/api/openapi/v1/files/s3-presigned-url',
+                body: location,
               },
             },
           })
@@ -105,7 +104,7 @@ export function UploadLogo({
         setIsUploading(false)
       }
     },
-    [params, onLogoUrlChange, uploadToS3],
+    [location, onLogoUrlChange, uploadToS3],
   )
 
   // File input change handler

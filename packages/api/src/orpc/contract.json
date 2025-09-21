@@ -1,0 +1,2036 @@
+{
+  "admin": {
+    "listUsers": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/users",
+          "tags": ["admin"],
+          "summary": "List all users with optional search functionality"
+        }
+      }
+    },
+    "getUser": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/users/{id}",
+          "tags": ["admin"],
+          "summary": "Get a single user by ID"
+        }
+      }
+    },
+    "deleteUser": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/admin/users/{id}",
+          "tags": ["admin"],
+          "summary": "Delete a user and their associated data"
+        }
+      }
+    },
+    "listOrganizations": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/organizations",
+          "tags": ["admin"],
+          "summary": "List all organizations across the platform"
+        }
+      }
+    },
+    "getOrganization": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/organizations/{id}",
+          "tags": ["admin"],
+          "summary": "Get a single organization by ID"
+        }
+      }
+    },
+    "listMembers": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/organizations/{organizationId}/members",
+          "tags": ["admin"],
+          "summary": "List all members of a specific organization"
+        }
+      }
+    },
+    "listWorkspaces": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/workspaces",
+          "tags": ["admin"],
+          "summary": "List all workspaces across the platform"
+        }
+      }
+    },
+    "getWorkspace": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/workspaces/{id}",
+          "tags": ["admin"],
+          "summary": "Get a single workspace by ID"
+        }
+      }
+    },
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/apps",
+          "tags": ["admin"],
+          "summary": "List all apps across all workspaces"
+        }
+      }
+    },
+    "listByCategory": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/apps/category/{categoryId}",
+          "tags": ["admin"],
+          "summary": "List all apps in a specific category across all workspaces"
+        }
+      }
+    },
+    "listByTags": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/apps/tags",
+          "tags": ["admin"],
+          "summary": "List all apps with any of the specified tags across all workspaces"
+        }
+      }
+    },
+    "listVersions": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/apps/{id}/versions",
+          "tags": ["admin"],
+          "summary": "List all versions of an app across all workspaces"
+        }
+      }
+    },
+    "byId": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/admin/apps/{id}",
+          "tags": ["admin"],
+          "summary": "Get a single app by ID across all workspaces"
+        }
+      }
+    },
+    "createCategory": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/admin/categories",
+          "tags": ["admin"],
+          "summary": "Create a new category for apps"
+        }
+      }
+    },
+    "updateCategory": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PUT",
+          "path": "/v1/admin/categories/{id}",
+          "tags": ["admin"],
+          "summary": "Update an existing category"
+        }
+      }
+    },
+    "deleteCategory": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/admin/categories/{id}",
+          "tags": ["admin"],
+          "summary": "Delete a category by ID"
+        }
+      }
+    },
+    "deleteTags": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/admin/tags",
+          "tags": ["admin"],
+          "summary": "Delete one or more tags and remove all associations with apps"
+        }
+      }
+    },
+    "mock": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/admin/mock",
+          "tags": ["admin"],
+          "summary": "Mock endpoint for admin operations"
+        }
+      }
+    }
+  },
+  "organization": {
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/organizations",
+          "tags": ["organization"],
+          "summary": "Create a new organization"
+        }
+      }
+    },
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/organizations",
+          "tags": ["organization"],
+          "summary": "List all organizations for current user"
+        }
+      }
+    },
+    "setActive": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/organizations/set-active",
+          "tags": ["organization"],
+          "summary": "Set active organization for current user"
+        }
+      }
+    },
+    "get": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/organizations/{organizationId}",
+          "tags": ["organization"],
+          "summary": "Get organization details by ID"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/organizations/{organizationId}",
+          "tags": ["organization"],
+          "summary": "Update organization details"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/organizations/{organizationId}",
+          "tags": ["organization"],
+          "summary": "Delete organization"
+        }
+      }
+    },
+    "createInvitation": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/organizations/{organizationId}/invitations",
+          "tags": ["organization"],
+          "summary": "Create invitation for organization"
+        }
+      }
+    },
+    "acceptInvitation": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/invitations/{invitationId}/accept",
+          "tags": ["organization"],
+          "summary": "Accept invitation"
+        }
+      }
+    },
+    "cancelInvitation": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/invitations/{invitationId}/cancel",
+          "tags": ["organization"],
+          "summary": "Cancel invitation"
+        }
+      }
+    },
+    "rejectInvitation": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/invitations/{invitationId}/reject",
+          "tags": ["organization"],
+          "summary": "Reject invitation"
+        }
+      }
+    },
+    "getInvitation": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/invitations/{invitationId}",
+          "tags": ["organization"],
+          "summary": "Get invitation details"
+        }
+      }
+    },
+    "listInvitations": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/organizations/{organizationId}/invitations",
+          "tags": ["organization"],
+          "summary": "List organization invitations"
+        }
+      }
+    },
+    "listUserInvitations": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/me/invitations",
+          "tags": ["organization"],
+          "summary": "List user invitations"
+        }
+      }
+    },
+    "listMembers": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/organizations/{organizationId}/members",
+          "tags": ["organization"],
+          "summary": "List organization members"
+        }
+      }
+    },
+    "addMember": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/organizations/{organizationId}/members",
+          "tags": ["organization"],
+          "summary": "Add member to organization"
+        }
+      }
+    },
+    "removeMember": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/organizations/{organizationId}/members/{memberId}",
+          "tags": ["organization"],
+          "summary": "Remove member from organization"
+        }
+      }
+    },
+    "updateMemberRole": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/organizations/{organizationId}/members/{memberId}",
+          "tags": ["organization"],
+          "summary": "Update member role"
+        }
+      }
+    },
+    "transferOwnership": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/organizations/{organizationId}/transfer-ownership",
+          "tags": ["organization"],
+          "summary": "Transfer organization ownership"
+        }
+      }
+    },
+    "leaveOrganization": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/organizations/{organizationId}/members/leave",
+          "tags": ["organization"],
+          "summary": "Leave organization"
+        }
+      }
+    }
+  },
+  "workspace": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/workspaces",
+          "tags": ["workspaces"],
+          "summary": "List all workspaces for the current user"
+        }
+      }
+    },
+    "get": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/workspaces/{id}",
+          "tags": ["workspaces"],
+          "summary": "Get a single workspace by ID"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/workspaces",
+          "tags": ["workspaces"],
+          "summary": "Create a new workspace"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/workspaces/{id}",
+          "tags": ["workspaces"],
+          "summary": "Update a workspace"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/workspaces/{id}",
+          "tags": ["workspaces"],
+          "summary": "Delete a workspace"
+        }
+      }
+    },
+    "transferOwnership": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/workspaces/{workspaceId}/transfer-ownership",
+          "tags": ["workspaces"],
+          "summary": "Transfer workspace ownership to another organization"
+        }
+      }
+    }
+  },
+  "user": {
+    "session": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/me/session",
+          "tags": ["me"],
+          "summary": "Get current session of current user"
+        }
+      }
+    },
+    "accounts": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/me/accounts",
+          "tags": ["me"],
+          "summary": "Get linked accounts of current user"
+        }
+      }
+    },
+    "sessions": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/me/sessions",
+          "tags": ["me"],
+          "summary": "Get sessions of current user"
+        }
+      }
+    },
+    "oauthApps": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/me/oauth-apps",
+          "tags": ["me"],
+          "summary": "Get authorized OAuth apps for current user"
+        }
+      }
+    },
+    "revokeOauthApp": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/me/oauth-apps/{clientId}",
+          "tags": ["me"],
+          "summary": "Revoke access token for a specific OAuth app"
+        }
+      }
+    }
+  },
+  "providerKey": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/provider-keys",
+          "tags": ["provider-key"],
+          "summary": "List provider keys"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/provider-keys",
+          "tags": ["provider-key"],
+          "summary": "Create provider key"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/provider-keys/{id}",
+          "tags": ["provider-key"],
+          "summary": "Update provider key"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/provider-keys/{id}",
+          "tags": ["provider-key"],
+          "summary": "Delete provider key"
+        }
+      }
+    }
+  },
+  "app": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/apps",
+          "tags": ["apps"],
+          "summary": "List all apps in a workspace or organization"
+        }
+      }
+    },
+    "listByCategory": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/apps/by-category/{categoryId}",
+          "tags": ["apps"],
+          "summary": "List all apps in a specific category within a workspace"
+        }
+      }
+    },
+    "listByTags": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/apps/by-tags",
+          "tags": ["apps"],
+          "summary": "List all apps with any of the specified tags in a workspace"
+        }
+      }
+    },
+    "listVersions": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/apps/{id}/versions",
+          "tags": ["apps"],
+          "summary": "List all versions of an app"
+        }
+      }
+    },
+    "byId": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/apps/{id}",
+          "tags": ["apps"],
+          "summary": "Get a single app by ID"
+        }
+      }
+    },
+    "getVersion": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/apps/{id}/versions/{version}",
+          "tags": ["apps"],
+          "summary": "Get a specific version of an app"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/apps",
+          "tags": ["apps"],
+          "summary": "Create a new app in a workspace"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/apps/{id}",
+          "tags": ["apps"],
+          "summary": "Update an existing app"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/apps/{id}",
+          "tags": ["apps"],
+          "summary": "Delete an app"
+        }
+      }
+    },
+    "publish": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/apps/{id}/publish",
+          "tags": ["apps"],
+          "summary": "Publish an app version"
+        }
+      }
+    },
+    "listTags": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/tags",
+          "tags": ["tags"],
+          "summary": "List all tags"
+        }
+      }
+    },
+    "updateTags": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/apps/{id}/tags",
+          "tags": ["apps"],
+          "summary": "Update tags for an app"
+        }
+      }
+    },
+    "listCategories": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/categories",
+          "tags": ["categories"],
+          "summary": "List all categories"
+        }
+      }
+    },
+    "updateCategories": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/apps/{id}/categories",
+          "tags": ["apps"],
+          "summary": "Update app categories"
+        }
+      }
+    }
+  },
+  "apiKey": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/api-keys",
+          "tags": ["keys"],
+          "summary": "List all API keys for a scope"
+        }
+      }
+    },
+    "has": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/api-keys/{id}/exists",
+          "tags": ["keys"],
+          "summary": "Check if an entity has an API key"
+        }
+      }
+    },
+    "get": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/api-keys/{scope}/{id}",
+          "tags": ["keys"],
+          "summary": "Get API key for an entity"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/api-keys",
+          "tags": ["keys"],
+          "summary": "Create a new API key for an entity"
+        }
+      }
+    },
+    "rotate": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/api-keys/{scope}/{id}/rotate",
+          "tags": ["keys"],
+          "summary": "Rotate (regenerate) API key for an entity"
+        }
+      }
+    },
+    "verify": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/api-keys/verify",
+          "tags": ["keys"],
+          "summary": "Verify an API key"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/api-keys/{scope}/{id}",
+          "tags": ["keys"],
+          "summary": "Delete the API key for an entity"
+        }
+      }
+    }
+  },
+  "oauthApp": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/oauth-apps",
+          "tags": ["oauth-apps"],
+          "summary": "List all OAuth apps in a workspace or for a specific app"
+        }
+      }
+    },
+    "has": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/oauth-apps/{appId}/exists",
+          "tags": ["oauth-apps"],
+          "summary": "Check if the application has OAuth app"
+        }
+      }
+    },
+    "get": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/oauth-apps/{appId}",
+          "tags": ["oauth-apps"],
+          "summary": "Get OAuth application"
+        }
+      }
+    },
+    "info": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/oauth-apps/client/{clientId}",
+          "tags": ["oauth-apps"],
+          "summary": "Get OAuth application info by client ID"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/oauth-apps",
+          "tags": ["oauth-apps"],
+          "summary": "Create new OAuth app"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/oauth-apps/{appId}",
+          "tags": ["oauth-apps"],
+          "summary": "Update OAuth application"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/oauth-apps/{appId}",
+          "tags": ["oauth-apps"],
+          "summary": "Delete OAuth application"
+        }
+      }
+    },
+    "rotateSecret": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/oauth-apps/{appId}/rotate-secret",
+          "tags": ["oauth-apps"],
+          "summary": "Rotate client secret for OAuth application"
+        }
+      }
+    }
+  },
+  "agent": {
+    "listByApp": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/agents",
+          "tags": ["agents"],
+          "summary": "List all agents for an app"
+        }
+      }
+    },
+    "listByAppVersion": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/agents/by-app-version",
+          "tags": ["agents"],
+          "summary": "List all agent versions for a specific app version"
+        }
+      }
+    },
+    "listVersions": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/agents/{agentId}/versions",
+          "tags": ["agents"],
+          "summary": "List all versions of an agent"
+        }
+      }
+    },
+    "byId": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/agents/{id}",
+          "tags": ["agents"],
+          "summary": "Get a single agent by ID"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/agents",
+          "tags": ["agents"],
+          "summary": "Create a new agent for an app"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/agents/{id}",
+          "tags": ["agents"],
+          "summary": "Update an existing agent"
+        }
+      }
+    }
+  },
+  "dataset": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/datasets",
+          "tags": ["datasets"],
+          "summary": "List all datasets in a workspace"
+        }
+      }
+    },
+    "byId": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/datasets/{id}",
+          "tags": ["datasets"],
+          "summary": "Get a single dataset by ID within a workspace"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/datasets",
+          "tags": ["datasets"],
+          "summary": "Create a new dataset in a workspace"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/datasets/{id}",
+          "tags": ["datasets"],
+          "summary": "Update an existing dataset in a workspace"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/datasets/{id}",
+          "tags": ["datasets"],
+          "summary": "Delete a dataset from a workspace"
+        }
+      }
+    },
+    "createDocument": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/documents",
+          "tags": ["datasets"],
+          "summary": "Create a new document in a dataset"
+        }
+      }
+    },
+    "updateDocument": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/documents/{id}",
+          "tags": ["datasets"],
+          "summary": "Update an existing document"
+        }
+      }
+    },
+    "deleteDocument": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/documents/{id}",
+          "tags": ["datasets"],
+          "summary": "Delete a document and all its segments and chunks",
+          "description": "Deletes a document and all its related segments and chunks. Also deletes the associated S3 file if it exists."
+        }
+      }
+    },
+    "listDocuments": { "~orpc": { "errorMap": {}, "meta": {}, "route": {} } },
+    "getDocument": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/documents/{id}",
+          "tags": ["datasets"],
+          "summary": "Get a single document by ID"
+        }
+      }
+    },
+    "createSegment": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/segments",
+          "tags": ["datasets"],
+          "summary": "Create a new document segment"
+        }
+      }
+    },
+    "updateSegment": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/segments/{id}",
+          "tags": ["datasets"],
+          "summary": "Update an existing document segment"
+        }
+      }
+    },
+    "deleteSegment": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/segments/{id}",
+          "tags": ["datasets"],
+          "summary": "Delete a document segment and all its chunks"
+        }
+      }
+    },
+    "listSegments": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/segments",
+          "tags": ["datasets"],
+          "summary": "List all segments in a document"
+        }
+      }
+    },
+    "createChunk": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/chunks",
+          "tags": ["datasets"],
+          "summary": "Create a new document chunk"
+        }
+      }
+    },
+    "updateChunk": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/chunks/{id}",
+          "tags": ["datasets"],
+          "summary": "Update an existing document chunk"
+        }
+      }
+    },
+    "deleteChunk": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/chunks/{id}",
+          "tags": ["datasets"],
+          "summary": "Delete a document chunk"
+        }
+      }
+    },
+    "listChunks": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/chunks",
+          "tags": ["datasets"],
+          "summary": "List all chunks in a document segment"
+        }
+      }
+    }
+  },
+  "storage": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/storage/list",
+          "tags": ["storage"],
+          "summary": "List objects in storage bucket"
+        }
+      }
+    },
+    "head": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "HEAD",
+          "path": "/v1/storage/head",
+          "tags": ["storage"],
+          "summary": "Get object metadata without fetching content"
+        }
+      }
+    },
+    "get": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/storage/get",
+          "tags": ["storage"],
+          "summary": "Get object content and metadata"
+        }
+      }
+    },
+    "createPresignedDownloadUrl": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/storage/presigned-download-url",
+          "tags": ["storage"],
+          "summary": "Create presigned URL for downloading an object"
+        }
+      }
+    },
+    "put": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PUT",
+          "path": "/v1/storage/put",
+          "tags": ["storage"],
+          "summary": "Upload an object directly to storage"
+        }
+      }
+    },
+    "createPresignedUploadUrl": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/storage/presigned-upload-url",
+          "tags": ["storage"],
+          "summary": "Create presigned URL for uploading an object"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/storage/delete",
+          "tags": ["storage"],
+          "summary": "Delete one or more objects from the bucket"
+        }
+      }
+    },
+    "listMultipartUploads": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/storage/multipart-uploads",
+          "tags": ["storage"],
+          "summary": "List ongoing multipart uploads for the application"
+        }
+      }
+    },
+    "createMultipartUpload": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/storage/multipart-upload",
+          "tags": ["storage"],
+          "summary": "Initiate a multipart upload"
+        }
+      }
+    },
+    "uploadPart": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/storage/multipart-upload/part",
+          "tags": ["storage"],
+          "summary": "Upload a part of a multipart upload"
+        }
+      }
+    },
+    "createPresignedUploadPartUrl": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/storage/multipart-upload/presigned-part-url",
+          "tags": ["storage"],
+          "summary": "Create presigned URL for uploading a part of a multipart upload"
+        }
+      }
+    },
+    "completeMultipartUpload": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/storage/multipart-upload/complete",
+          "tags": ["storage"],
+          "summary": "Complete a multipart upload after all parts have been uploaded"
+        }
+      }
+    },
+    "abortMultipartUpload": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/storage/multipart-upload/abort",
+          "tags": ["storage"],
+          "summary": "Abort an ongoing multipart upload, deleting any uploaded parts"
+        }
+      }
+    }
+  },
+  "model": {
+    "listDefaultModels": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/default-models",
+          "tags": ["models"],
+          "summary": "Get default models used by the platform"
+        }
+      }
+    },
+    "listProviders": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/providers",
+          "tags": ["models"],
+          "summary": "List all available model providers"
+        }
+      }
+    },
+    "listProvidersModels": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/providers-models",
+          "tags": ["models"],
+          "summary": "List all providers with their models, grouped by model type"
+        }
+      }
+    },
+    "listModels": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/models",
+          "tags": ["models"],
+          "summary": "List all available models across all providers"
+        }
+      }
+    },
+    "getModel": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/models/{id}",
+          "tags": ["models"],
+          "summary": "Get detailed information about a specific model"
+        }
+      }
+    },
+    "updateModel": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/models",
+          "tags": ["models"],
+          "summary": "Add or update a model to a provider"
+        }
+      }
+    },
+    "updateModels": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/models/batch",
+          "tags": ["models"],
+          "summary": "Add or update multiple models to a provider"
+        }
+      }
+    },
+    "sortModels": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/models/sort",
+          "tags": ["models"],
+          "summary": "Sort models for a specific provider and type"
+        }
+      }
+    },
+    "deleteModel": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/models",
+          "tags": ["models"],
+          "summary": "Delete a model from a provider"
+        }
+      }
+    },
+    "deleteModels": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/models/batch",
+          "tags": ["models"],
+          "summary": "Delete multiple models from a provider"
+        }
+      }
+    }
+  },
+  "chat": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/chats",
+          "tags": ["chats"],
+          "summary": "List all chats"
+        }
+      }
+    },
+    "listByIds": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/chats/list-by-ids",
+          "tags": ["chats"],
+          "summary": "Get multiple chats by their IDs"
+        }
+      }
+    },
+    "byId": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/chats/{id}",
+          "tags": ["chats"],
+          "summary": "Get a single chat by ID"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/chats",
+          "tags": ["chats"],
+          "summary": "Create a new chat"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/chats/{id}",
+          "tags": ["chats"],
+          "summary": "Update an existing chat"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/chats/{id}",
+          "tags": ["chats"],
+          "summary": "Delete an existing chat"
+        }
+      }
+    },
+    "batchDelete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/chats/batch-delete",
+          "tags": ["chats"],
+          "summary": "Delete multiple chats by their IDs"
+        }
+      }
+    },
+    "clone": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/chats/{id}/clone",
+          "tags": ["chats"],
+          "summary": "Clone a chat with specific messages"
+        }
+      }
+    }
+  },
+  "message": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/messages",
+          "tags": ["chats"],
+          "summary": "List all messages in a chat"
+        }
+      }
+    },
+    "listByIds": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/messages/list-by-ids",
+          "tags": ["chats"],
+          "summary": "List messages by their IDs within a specific chat"
+        }
+      }
+    },
+    "find": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/messages/{id}",
+          "tags": ["chats"],
+          "summary": "Get a single message by ID"
+        }
+      }
+    },
+    "get": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/messages/{id}",
+          "tags": ["chats"],
+          "summary": "Get a single message by ID"
+        }
+      }
+    },
+    "create": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/messages",
+          "tags": ["chats"],
+          "summary": "Create a new message in a chat"
+        }
+      }
+    },
+    "update": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PATCH",
+          "path": "/v1/messages/{id}",
+          "tags": ["chats"],
+          "summary": "Update a message content"
+        }
+      }
+    },
+    "delete": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/messages/{id}",
+          "tags": ["chats"],
+          "summary": "Delete messages in a chat based on the specified message ID"
+        }
+      }
+    },
+    "vote": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/messages/vote",
+          "tags": ["chats"],
+          "summary": "Vote on a message"
+        }
+      }
+    }
+  },
+  "artifact": {
+    "listByChat": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/artifacts",
+          "tags": ["artifacts"],
+          "summary": "List all artifacts (of only latest version) for a chat"
+        }
+      }
+    },
+    "listVersionsById": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/artifacts/{id}/versions",
+          "tags": ["artifacts"],
+          "summary": "List all versions of an artifact by ID"
+        }
+      }
+    },
+    "deleteVersionsByIdAfterVersion": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/artifacts/{id}/versions",
+          "tags": ["artifacts"],
+          "summary": "Delete all versions of an artifact after the specified version"
+        }
+      }
+    },
+    "listSuggestions": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/artifacts/suggestions",
+          "tags": ["artifacts"],
+          "summary": "List suggestions for an artifact"
+        }
+      }
+    }
+  },
+  "credits": {
+    "getCredits": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/credits",
+          "tags": ["credits"],
+          "summary": "Get credits information for current user or organization"
+        }
+      }
+    },
+    "listOrders": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/credits/orders",
+          "tags": ["credits"],
+          "summary": "List credits orders for current user or organization"
+        }
+      }
+    },
+    "cancelOrder": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/credits/orders/{orderId}",
+          "tags": ["credits"],
+          "summary": "Cancel a credits order"
+        }
+      }
+    },
+    "createOnetimeCheckout": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/credits/checkout",
+          "tags": ["credits"],
+          "summary": "Create a one-time checkout session for credits purchase"
+        }
+      }
+    },
+    "listSubscriptions": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/credits/subscriptions",
+          "tags": ["credits"],
+          "summary": "List Stripe subscriptions for current user or organization"
+        }
+      }
+    },
+    "createAutoRechargeInvoice": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/credits/auto-recharge/invoice",
+          "tags": ["credits"],
+          "summary": "Create an auto-recharge invoice for credits"
+        }
+      }
+    },
+    "createAutoRechargePayment": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/credits/auto-recharge/payment",
+          "tags": ["credits"],
+          "summary": "Create an auto-recharge payment intent for credits"
+        }
+      }
+    },
+    "updateAutoRechargeSettings": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PUT",
+          "path": "/v1/credits/auto-recharge/settings",
+          "tags": ["credits"],
+          "summary": "Update auto-recharge settings for credits"
+        }
+      }
+    }
+  },
+  "expense": {
+    "list": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/expenses",
+          "tags": ["expenses"],
+          "summary": "List expenses for current user"
+        }
+      }
+    }
+  },
+  "stripe": {
+    "getCustomer": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/stripe/customer",
+          "tags": ["stripe"],
+          "summary": "Get customer information from Stripe"
+        }
+      }
+    },
+    "listPaymentMethods": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/stripe/payment-methods",
+          "tags": ["stripe"],
+          "summary": "List payment methods for a customer"
+        }
+      }
+    },
+    "addPaymentMethod": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/stripe/payment-methods",
+          "tags": ["stripe"],
+          "summary": "Add a new payment method using SetupIntent"
+        }
+      }
+    },
+    "removePaymentMethod": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/stripe/payment-methods/{paymentMethodId}",
+          "tags": ["stripe"],
+          "summary": "Remove a payment method"
+        }
+      }
+    },
+    "updateDefaultPaymentMethod": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "PUT",
+          "path": "/v1/stripe/payment-methods/{paymentMethodId}/default",
+          "tags": ["stripe"],
+          "summary": "Update customer default payment method"
+        }
+      }
+    },
+    "createCustomerSession": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/stripe/customer-session",
+          "tags": ["stripe"],
+          "summary": "Create customer session for pricing table"
+        }
+      }
+    }
+  },
+  "telemetry": {
+    "listTraces": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/telemetry/traces",
+          "tags": ["telemetry"],
+          "summary": "List traces from Langfuse"
+        }
+      }
+    },
+    "listObservations": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "GET",
+          "path": "/v1/telemetry/observations",
+          "tags": ["telemetry"],
+          "summary": "List observations from Langfuse"
+        }
+      }
+    },
+    "deleteTraces": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "DELETE",
+          "path": "/v1/telemetry/traces",
+          "tags": ["telemetry"],
+          "summary": "Delete multiple traces from Langfuse"
+        }
+      }
+    }
+  },
+  "file": {
+    "s3PresignedUrl": {
+      "~orpc": {
+        "errorMap": {},
+        "meta": {},
+        "route": {
+          "method": "POST",
+          "path": "/v1/files/s3-presigned-url",
+          "tags": ["files"],
+          "summary": "Create a S3 presigned upload URL"
+        }
+      }
+    }
+  }
+}
